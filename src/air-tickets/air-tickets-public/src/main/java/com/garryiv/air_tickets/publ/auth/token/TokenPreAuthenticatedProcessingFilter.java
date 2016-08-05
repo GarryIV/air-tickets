@@ -4,6 +4,9 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Searches in LOGIN_TOKEN request parameter, if
+ */
 public class TokenPreAuthenticatedProcessingFilter extends AbstractPreAuthenticatedProcessingFilter {
 
     public static final String LOGIN_TOKEN = "token";
