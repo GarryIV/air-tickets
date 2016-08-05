@@ -17,7 +17,6 @@ import java.util.Map;
 @RestController
 public class CoreApplication  {
 
-
 	@RequestMapping({ "/user", "/me" })
 	public Map<String, String> user(Principal principal) {
 		Map<String, String> map = new LinkedHashMap<>();
