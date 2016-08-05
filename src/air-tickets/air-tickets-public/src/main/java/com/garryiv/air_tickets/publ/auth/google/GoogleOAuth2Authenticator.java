@@ -1,4 +1,4 @@
-package com.garryiv.air_tickets.publ.google;
+package com.garryiv.air_tickets.publ.auth.google;
 
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.security.oauth2.client.DefaultOAuth2RequestAuthenticator;

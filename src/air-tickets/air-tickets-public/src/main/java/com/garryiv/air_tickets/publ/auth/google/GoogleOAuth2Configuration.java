@@ -1,4 +1,4 @@
-package com.garryiv.air_tickets.publ.google;
+package com.garryiv.air_tickets.publ.auth.google;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

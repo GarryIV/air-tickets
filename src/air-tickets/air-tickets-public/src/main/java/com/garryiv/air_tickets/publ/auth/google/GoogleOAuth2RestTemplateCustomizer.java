@@ -1,4 +1,4 @@
-package com.garryiv.air_tickets.publ.google;
+package com.garryiv.air_tickets.publ.auth.google;
 
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.security.oauth2.client.OAuth2RequestAuthenticator;
