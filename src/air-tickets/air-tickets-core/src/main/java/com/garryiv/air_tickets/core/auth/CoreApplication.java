@@ -1,27 +1,13 @@
-/*
- * Copyright 2012-2015 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.garryiv.air_tickets.core.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -56,7 +42,7 @@ import java.util.Map;
 @EnableOAuth2Client
 @EnableAuthorizationServer
 @Order(6)
-public class SocialApplication extends WebSecurityConfigurerAdapter {
+public class CoreApplication extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	OAuth2ClientContext oauth2ClientContext;
@@ -70,14 +56,12 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
 		http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**").permitAll().anyRequest()
 				.authenticated().and().exceptionHandling()
 				.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
 				.logoutSuccessUrl("/").permitAll().and().csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
 				.addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
-		// @formatter:on
 	}
 
 	@Configuration
@@ -85,14 +69,17 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	protected static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 		@Override
 		public void configure(HttpSecurity http) throws Exception {
-			// @formatter:off
 			http.antMatcher("/me").authorizeRequests().anyRequest().authenticated();
-			// @formatter:on
 		}
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(SocialApplication.class, args);
+		new SpringApplicationBuilder()
+				.sources(CoreApplication.class)
+				.properties("spring.config.name=core")
+				.build()
+				.run(args);
+
 	}
 
 	@Bean
@@ -104,8 +91,8 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	@ConfigurationProperties("github")
-	ClientResources github() {
+	@ConfigurationProperties("google")
+	ClientResources google() {
 		return new ClientResources();
 	}
 
@@ -119,9 +106,14 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		CompositeFilter filter = new CompositeFilter();
 		List<Filter> filters = new ArrayList<>();
 		filters.add(ssoFilter(facebook(), "/login/facebook"));
-		filters.add(ssoFilter(github(), "/login/github"));
+		filters.add(ssoFilter(google(), "/login/google"));
 		filter.setFilters(filters);
 		return filter;
+	}
+
+	@Bean
+	public ServletContextInitializer servletContextInitializer() {
+		return servletContext -> servletContext.getSessionCookieConfig().setName("CORE_SESSION_ID");
 	}
 
 	private Filter ssoFilter(ClientResources client, String path) {
@@ -136,17 +128,17 @@ public class SocialApplication extends WebSecurityConfigurerAdapter {
 		return oAuth2ClientAuthenticationFilter;
 	}
 
-}
+	static class ClientResources {
+		private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
+		private ResourceServerProperties resource = new ResourceServerProperties();
 
-class ClientResources {
-	private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
-	private ResourceServerProperties resource = new ResourceServerProperties();
+		public OAuth2ProtectedResourceDetails getClient() {
+			return client;
+		}
 
-	public OAuth2ProtectedResourceDetails getClient() {
-		return client;
+		public ResourceServerProperties getResource() {
+			return resource;
+		}
 	}
 
-	public ResourceServerProperties getResource() {
-		return resource;
-	}
 }
