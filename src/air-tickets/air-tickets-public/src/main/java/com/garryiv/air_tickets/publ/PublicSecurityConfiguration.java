@@ -1,10 +1,12 @@
 package com.garryiv.air_tickets.publ;
 
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @Configuration
+@EnableOAuth2Sso
 public class PublicSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -13,8 +15,8 @@ public class PublicSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatcher("/**")
                 .authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**")
-                .permitAll()
+                    .permitAll()
                 .anyRequest()
-                .permitAll();
+                    .authenticated();
     }
 }
