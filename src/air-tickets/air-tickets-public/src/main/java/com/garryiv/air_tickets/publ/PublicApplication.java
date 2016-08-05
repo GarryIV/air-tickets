@@ -10,7 +10,7 @@ public class PublicApplication {
         new SpringApplicationBuilder()
                 .sources(PublicApplication.class)
                 .properties("spring.config.name=public")
-                .build(args)
-                .run();
+                .build()
+                .run(args);
     }
 }

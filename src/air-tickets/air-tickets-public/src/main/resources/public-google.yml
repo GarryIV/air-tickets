@@ -1,15 +1,13 @@
-server:
-  port: 8080
-
-spring:
+security:
   oauth2:
     client:
-      clientId: 123
-      clientSecret: xxx
+      clientId: 618957030372-7qnv8kll64lr34v37osgcc058falaio4.apps.googleusercontent.com
+      clientSecret: s8Soa_T7s3jhJshLKih-hnQJ
       accessTokenUri: https://www.googleapis.com/oauth2/v3/token
       userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
       clientAuthenticationScheme: query
-      scope: profile email
+      scope:
+        - profile
     resource:
       userInfoUri: https://www.googleapis.com/plus/v1/people/me
       preferTokenInfo: false
