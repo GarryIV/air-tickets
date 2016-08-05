@@ -17,6 +17,7 @@ public class PublicSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/login**", "/webjars/**")
                     .permitAll()
                 .anyRequest()
-                    .authenticated();
+                    .authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll();
     }
 }
