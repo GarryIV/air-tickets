@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -22,12 +21,13 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
 
 import javax.servlet.Filter;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableOAuth2Client
-@EnableAuthorizationServer
 @Order(6)
 public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
@@ -45,42 +45,48 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    @ConfigurationProperties("google")
-    ClientResources google() {
-        return new ClientResources();
-    }
-
-    @Bean
-    @ConfigurationProperties("facebook")
-    ClientResources facebook() {
-        return new ClientResources();
+    @ConfigurationProperties
+    ProvidersProperties providers() {
+        return new ProvidersProperties();
     }
 
     private Filter ssoFilter() {
         CompositeFilter filter = new CompositeFilter();
-        List<Filter> filters = new ArrayList<>();
-        filters.add(ssoFilter(facebook(), "/login/facebook"));
-        filters.add(ssoFilter(google(), "/login/google"));
+        List<Filter> filters = providers().getOauth2Providers().values().stream()
+                .map(this::ssoFilter)
+                .collect(Collectors.toList());
         filter.setFilters(filters);
         return filter;
     }
 
+    private Filter ssoFilter(ProviderProperties client) {
 
-    private Filter ssoFilter(ClientResources client, String path) {
-        OAuth2ClientAuthenticationProcessingFilter oAuth2ClientAuthenticationFilter = new OAuth2ClientAuthenticationProcessingFilter(
-                path);
         OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
-        oAuth2ClientAuthenticationFilter.setRestTemplate(oAuth2RestTemplate);
-        UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(),
-                client.getClient().getClientId());
+        UserInfoTokenServices tokenServices = new UserInfoTokenServices(
+                client.getResource().getUserInfoUri(),
+                client.getClient().getClientId()
+        );
         tokenServices.setRestTemplate(oAuth2RestTemplate);
-        oAuth2ClientAuthenticationFilter.setTokenServices(tokenServices);
-        return oAuth2ClientAuthenticationFilter;
+
+        OAuth2ClientAuthenticationProcessingFilter filter
+                = new OAuth2ClientAuthenticationProcessingFilter(client.getPath());
+        filter.setRestTemplate(oAuth2RestTemplate);
+        filter.setTokenServices(tokenServices);
+        return filter;
     }
 
-    static class ClientResources {
+    public static class ProvidersProperties {
+        private Map<String, ProviderProperties> oauth2Providers = new HashMap<>();
+
+        public Map<String, ProviderProperties> getOauth2Providers() {
+            return oauth2Providers;
+        }
+    }
+
+    public static class ProviderProperties {
         private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
         private ResourceServerProperties resource = new ResourceServerProperties();
+        private String path;
 
         public OAuth2ProtectedResourceDetails getClient() {
             return client;
@@ -88,6 +94,14 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         public ResourceServerProperties getResource() {
             return resource;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
         }
     }
 
