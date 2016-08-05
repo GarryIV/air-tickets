@@ -46,17 +46,15 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest()
                     .authenticated()
                 .and()
-                    .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                    .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
                 .and()
                     .logout().logoutSuccessUrl("/").permitAll()
                 .and()
                     .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
-                    .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
+                    .addFilterAfter(ssoFilter(), BasicAuthenticationFilter.class);
 
-        http
-                .formLogin()
-                .loginProcessingUrl("/login/staff");
+        http.httpBasic();
 
     }
 
