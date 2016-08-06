@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class FlightService {
     private final FlightRepository flightRepository;
@@ -14,7 +16,7 @@ public class FlightService {
         this.flightRepository = flightRepository;
     }
 
-    public Page<Flight> search(Pageable pageable) {
-        return flightRepository.findAll(pageable);
+    public Page<Flight> findAll(Flight exampleFlight, Pageable pageable) {
+        return flightRepository.findAll(FlightSpecs.from(exampleFlight), pageable);
     }
 }
