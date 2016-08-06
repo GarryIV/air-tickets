@@ -1,5 +1,6 @@
 package com.garryiv.air_tickets.core.services.flight;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,12 +26,10 @@ public class FlightServiceTest {
 
     @Test
     public void findAll() {
-        LocalDateTime now = LocalDateTime.now();
-
         Flight exampleFlight = new Flight();
         exampleFlight.setFlightNumber("YY333");
-        exampleFlight.setDeparture(now);
-        exampleFlight.setDeparture(now.plusHours(3));
+        exampleFlight.setDeparture(new Date());
+        exampleFlight.setArrival(DateUtils.addHours(exampleFlight.getDeparture(), 3));
         exampleFlight.setOrigin("DMD");
         exampleFlight.setDestination("SDG");
         flightRepository.save(exampleFlight);

@@ -1,11 +1,13 @@
 package com.garryiv.air_tickets.core.services.flight;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
-import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.Date;
 
 import static org.springframework.data.jpa.domain.Specifications.where;
 
@@ -37,10 +39,12 @@ public class FlightSpecs {
      * @param departure example departure
      * @return spec
      */
-    public static Specification<Flight> departureEquals(LocalDate departure) {
+    public static Specification<Flight> departureEquals(Date departure) {
+        Date from = DateUtils.round(departure, Calendar.DAY_OF_MONTH);
+        Date to = DateUtils.addDays(from, 1);
         return (root, query, cb) -> cb.and(
-                cb.greaterThanOrEqualTo(root.get("departure"), departure.atStartOfDay()),
-                cb.lessThan(root.get("departure"), departure.plusDays(1).atStartOfDay())
+                cb.greaterThanOrEqualTo(root.get("departure"), from),
+                cb.lessThan(root.get("departure"), to)
         );
     }
 
@@ -52,7 +56,7 @@ public class FlightSpecs {
     public static Specification<Flight> from(Flight flight) {
         return where(originEquals(flight.getOrigin()))
                 .or(destinationEquals(flight.getDestination()))
-                .or(departureEquals(flight.getDeparture().toLocalDate()));
+                .or(departureEquals(flight.getDeparture()));
     }
 
     private static Predicate equalIgnoreCase(CriteriaBuilder cb, Expression<String> x, String y) {

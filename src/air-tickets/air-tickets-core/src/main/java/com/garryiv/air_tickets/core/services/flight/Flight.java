@@ -4,27 +4,28 @@ import com.garryiv.air_tickets.core.services.EntitySupport;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
+@Table(name = "FLIGHT_TBL")
 public class Flight extends EntitySupport {
     @Id
     @Column(name = "flight_id")
     @GeneratedValue
     private Long id;
 
-    @Version
-    private Timestamp version;
-
     private String origin;
 
     private String destination;
 
+    private Date departure;
+
+    private Date arrival;
+
     private String flightNumber;
 
-    private LocalDateTime departure;
-
-    private LocalDateTime arrival;
+    @Version
+    private Timestamp version;
 
     public Long getId() {
         return id;
@@ -66,19 +67,19 @@ public class Flight extends EntitySupport {
         this.flightNumber = flightNumber;
     }
 
-    public LocalDateTime getDeparture() {
+    public Date getDeparture() {
         return departure;
     }
 
-    public void setDeparture(LocalDateTime departure) {
+    public void setDeparture(Date departure) {
         this.departure = departure;
     }
 
-    public LocalDateTime getArrival() {
+    public Date getArrival() {
         return arrival;
     }
 
-    public void setArrival(LocalDateTime arrival) {
+    public void setArrival(Date arrival) {
         this.arrival = arrival;
     }
 }
