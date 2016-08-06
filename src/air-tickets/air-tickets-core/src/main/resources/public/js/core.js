@@ -10,8 +10,10 @@ angular.module("app", []).controller("home", function($rootScope, $http) {
 		$http.get('/user', {
 			headers : headers
 		}).then(function(response) {
+
 			if (response.data.name) {
-				$rootScope.authenticated = true;
+                self.user = response.data.name
+			    $rootScope.authenticated = true;
 			} else {
 				$rootScope.authenticated = false;
 			}
@@ -26,23 +28,12 @@ angular.module("app", []).controller("home", function($rootScope, $http) {
 
     self.credentials = {};
     self.login = function() {
-        authenticate(self.credentials, function(authenticated) {
-            if (authenticated) {
-                $location.path("/");
-                self.error = false;
-                $rootScope.authenticated = true;
-            } else {
-                $location.path("/login");
-                self.error = true;
-                $rootScope.authenticated = false;
-            }
-        })
+        authenticate(self.credentials, function(authenticated) { self.error = !authenticated; })
     };
 
     self.logout = function() {
         $http.post('logout', {}).finally(function() {
             $rootScope.authenticated = false;
-            $location.path("/");
         });
     }
 });

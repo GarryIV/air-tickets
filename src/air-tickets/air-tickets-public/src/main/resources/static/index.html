@@ -17,7 +17,7 @@
             $http.get("/user").success(function(data) {
                 self.authenticated = true;
                 try {
-                    self.user = data.userAuthentication.details.displayName;
+                    self.user = data.userAuthentication.details.name;
                 } catch (e) {
                 }
             }).error(function() {
@@ -27,7 +27,6 @@
             self.logout = function() {
                 $http.post('/logout', {}).success(function() {
                     self.authenticated = false;
-                    $location.path("/");
                 }).error(function(data) {
                     console.log("Logout failed")
                     self.authenticated = false;

@@ -10,14 +10,14 @@ security:
 oauth2-providers:
   google:
     path: /login/google
+    email-field: emails[0]['value']
     client:
       clientId: 618957030372-7qnv8kll64lr34v37osgcc058falaio4.apps.googleusercontent.com
       clientSecret: s8Soa_T7s3jhJshLKih-hnQJ
       accessTokenUri: https://www.googleapis.com/oauth2/v3/token
       userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
       clientAuthenticationScheme: query
-      scope:
-        - profile
+      scope: email
     resource:
       userInfoUri: https://www.googleapis.com/plus/v1/people/me
       preferTokenInfo: false
@@ -32,8 +32,9 @@ oauth2-providers:
       tokenName: oauth_token
       authenticationScheme: query
       clientAuthenticationScheme: form
+      scope: email
     resource:
-      userInfoUri: https://graph.facebook.com/me
+      userInfoUri: https://graph.facebook.com/me?fields=name,email
 
 logging:
   level:

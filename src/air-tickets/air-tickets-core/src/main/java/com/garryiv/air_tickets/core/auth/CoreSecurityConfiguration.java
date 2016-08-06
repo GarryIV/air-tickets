@@ -1,14 +1,19 @@
 package com.garryiv.air_tickets.core.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.expression.Expression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -16,12 +21,14 @@ import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResour
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetailsSource;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
 
 import javax.servlet.Filter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,12 +87,16 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 client.getResource().getUserInfoUri(),
                 client.getClient().getClientId()
         );
+        tokenServices.setPrincipalExtractor(new SpELPrincipalExtractor(client));
+        tokenServices.setAuthoritiesExtractor(map ->
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT")));
         tokenServices.setRestTemplate(oAuth2RestTemplate);
 
         OAuth2ClientAuthenticationProcessingFilter filter
                 = new OAuth2ClientAuthenticationProcessingFilter(client.getPath());
         filter.setRestTemplate(oAuth2RestTemplate);
         filter.setTokenServices(tokenServices);
+        filter.setAuthenticationDetailsSource(new OAuth2AuthenticationDetailsSource());
         return filter;
     }
 
@@ -101,6 +112,7 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
         private OAuth2ProtectedResourceDetails client = new AuthorizationCodeResourceDetails();
         private ResourceServerProperties resource = new ResourceServerProperties();
         private String path;
+        private String emailField = "email";
 
         public OAuth2ProtectedResourceDetails getClient() {
             return client;
@@ -117,6 +129,29 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
         public void setPath(String path) {
             this.path = path;
         }
+
+        public String getEmailField() {
+            return emailField;
+        }
+
+        public void setEmailField(String emailField) {
+            this.emailField = emailField;
+        }
     }
 
+    private static class SpELPrincipalExtractor implements PrincipalExtractor {
+
+        private final Expression expression;
+
+        public SpELPrincipalExtractor(ProviderProperties client) {
+            expression = new SpelExpressionParser().parseExpression("#" + client.getEmailField());
+        }
+
+        @Override
+        public Object extractPrincipal(Map<String, Object> map) {
+            StandardEvaluationContext context = new StandardEvaluationContext();
+            context.setVariables(map);
+            return expression.getValue(context);
+        }
+    }
 }
