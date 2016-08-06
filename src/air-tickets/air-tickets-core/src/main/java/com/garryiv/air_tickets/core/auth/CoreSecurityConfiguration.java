@@ -105,7 +105,7 @@ public class CoreSecurityConfiguration extends WebSecurityConfigurerAdapter {
         );
         tokenServices.setPrincipalExtractor(new SpELPrincipalExtractor(client));
         tokenServices.setAuthoritiesExtractor(map ->
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT")));
+                Collections.singletonList(new SimpleGrantedAuthority(Roles.PUBLIC)));
         tokenServices.setRestTemplate(oAuth2RestTemplate);
 
         OAuth2ClientAuthenticationProcessingFilter filter

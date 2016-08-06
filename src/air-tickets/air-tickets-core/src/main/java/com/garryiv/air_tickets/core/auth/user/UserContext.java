@@ -1,6 +1,8 @@
 package com.garryiv.air_tickets.core.auth.user;
 
-public interface UserContext {
+import java.io.Serializable;
+
+public interface UserContext extends Serializable {
     Long getUserId();
 
     String getEmail();
