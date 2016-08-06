@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:h2:~/air-tickets/air-tickets
+    url: jdbc:h2:tcp://localhost/C:/Users/Default.NADYA-PC/air-tickets
     username: sa
     password:

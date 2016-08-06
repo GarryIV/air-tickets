@@ -36,6 +36,11 @@ oauth2-providers:
     resource:
       userInfoUri: https://graph.facebook.com/me?fields=name,email
 
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+
 logging:
   level:
     org.springframework.security: DEBUG

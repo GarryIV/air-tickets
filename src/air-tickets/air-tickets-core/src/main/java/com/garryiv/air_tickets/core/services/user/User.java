@@ -2,12 +2,10 @@ package com.garryiv.air_tickets.core.services.user;
 
 import com.garryiv.air_tickets.core.services.EntitySupport;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "USER_TBL")
 public class User extends EntitySupport {
     @Id
     @Column(name = "user_id")

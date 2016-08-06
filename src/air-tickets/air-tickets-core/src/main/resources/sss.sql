@@ -1,1 +1,0 @@
--- MERGE INTO Fligth (origin, destination, departure) key(flight_id) VALUES(1, 'ZZZ', 'YYY', current_time + 1);
