@@ -27,7 +27,7 @@
         <div class="alert alert-danger" ng-show="home.error">
             There was a problem logging in. Please try again.
         </div>
-        <form role="form" ng-submit="home.login()">
+        <form role="form" ng-submit="home.loginStaff()">
             <div class="form-group">
                 <label for="username">Username:</label> <input type="text"
                                                                class="form-control" id="username" name="username" ng-model="home.credentials.username"/>
@@ -40,7 +40,7 @@
         </form>
     </div>
 	<div class="container" ng-show="authenticated">
-		Logged in as: <span ng-bind="home.user"></span>
+		Logged in as: <span ng-bind="home.credentials.username"></span>
 		<div>
 			<button ng-click="home.logout()" class="btn btn-primary">Logout</button>
 		</div>
