@@ -16,7 +16,13 @@ public class FlightService {
         this.flightRepository = flightRepository;
     }
 
-    public Page<Flight> findAll(Flight exampleFlight, Pageable pageable) {
-        return flightRepository.findAll(FlightSpecs.from(exampleFlight), pageable);
+    /**
+     * Filter by origin, destination and departure day
+     * @param example example flight
+     * @param pageable pagination and sort order
+     * @return page
+     */
+    public Page<Flight> findAll(Flight example, Pageable pageable) {
+        return flightRepository.findAll(FlightSpecs.from(example), pageable);
     }
 }
