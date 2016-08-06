@@ -1,55 +1,39 @@
 <!doctype html>
-<html lang="en">
+<html>
 <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Demo</title>
+    <title>GarryIV's Air Tickets</title>
     <meta name="description" content=""/>
     <meta name="viewport" content="width=device-width"/>
     <base href="/"/>
     <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
-    <script type="text/javascript">
-        angular.module("app", []).controller("home", function($http) {
-            var self = this;
-            $http.get("/user").success(function(data) {
-                self.authenticated = true;
-                try {
-                    self.user = data.userAuthentication.details.name;
-                } catch (e) {
-                }
-            }).error(function() {
-                self.authenticated = false;
-                self.user = "N/A";
-            });
-            self.logout = function() {
-                $http.post('/logout', {}).success(function() {
-                    self.authenticated = false;
-                }).error(function(data) {
-                    console.log("Logout failed")
-                    self.authenticated = false;
-                });
-            };
-        });
-
-
-    </script>
+    <style type="text/css">
+        [ng\:cloak], [ng-cloak], .ng-cloak {
+            display: none !important;
+        }
+    </style>
 </head>
-<body ng-app="app" ng-controller="home as home">
-<h1>Demo</h1>
 
-<div class="container" ng-show="!home.authenticated">
-    Login with: <a href="/login">Facebook</a>
+<body ng-app="public" ng-cloak class="ng-cloak">
+<div ng-controller="navigation as nav" class="container">
+    <ul class="nav nav-pills" role="tablist">
+        <li ng-class="{active:nav.tab('home')}"><a href="/">home</a></li>
+        <li ng-class="{active:nav.tab('flight')}"><a href="/flight">flight</a></li>
+        <li ng-class="{active:nav.tab('reservation')}"><a href="/reservation">reservation</a></li>
+        <!--<li ng-show="nav.authenticated()"><a href="" ng-click="nav.logout()">logout</a></li>-->
+    </ul>
 </div>
-
-<div class="container" ng-show="home.authenticated">
-    Logged in as: <span ng-bind="home.user"></span>
-    <div>
-        <button ng-click="home.logout()" class="btn btn-primary">Logout</button>
-    </div>
-</div>
-
+<div ng-view class="container"></div>
+<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/webjars/angularjs/angular.min.js"></script>
+<script type="text/javascript" src="/webjars/angularjs/angular-route.min.js"></script>
+<script type="text/javascript" src="/js/public.js"></script>
+<script type="text/javascript" src="/js/auth/auth.js"></script>
+<script type="text/javascript" src="/js/navigation/navigation.js"></script>
+<script type="text/javascript" src="/js/home/home.js"></script>
+<script type="text/javascript" src="/js/flight/flight.js"></script>
+<script type="text/javascript" src="/js/reservation/reservation.js"></script>
 </body>
 </html>

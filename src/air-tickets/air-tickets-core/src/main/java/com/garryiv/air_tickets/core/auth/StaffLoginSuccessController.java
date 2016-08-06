@@ -17,7 +17,7 @@ public class StaffLoginSuccessController {
     private RequestCache requestCache = new HttpSessionRequestCache();
 
     @RequestMapping("/login/staff/success")
-    public Object redirectInfo(HttpServletRequest request, HttpServletResponse response) {
+    public Map<String, String> redirectInfo(HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> res = new HashMap<>();
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         requestCache.removeRequest(request, response);
