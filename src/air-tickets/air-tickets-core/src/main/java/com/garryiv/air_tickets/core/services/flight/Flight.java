@@ -1,11 +1,13 @@
 package com.garryiv.air_tickets.core.services.flight;
 
+import com.garryiv.air_tickets.core.services.EntitySupport;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
-public class Flight {
+public class Flight extends EntitySupport {
     @Id
     @Column(name = "flight_id")
     @GeneratedValue

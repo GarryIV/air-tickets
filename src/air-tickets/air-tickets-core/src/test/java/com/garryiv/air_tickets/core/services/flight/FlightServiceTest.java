@@ -38,6 +38,8 @@ public class FlightServiceTest {
         Page<Flight> flights = flightService.findAll(exampleFlight, new PageRequest(0, 10));
         assertNotNull(flights);
         assertEquals(1, flights.getTotalElements());
+        Flight first = flights.getContent().get(0);
+        assertNotNull(first.getId());
     }
 
 }
