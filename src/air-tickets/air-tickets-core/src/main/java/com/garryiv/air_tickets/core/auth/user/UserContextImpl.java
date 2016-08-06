@@ -1,21 +1,21 @@
 package com.garryiv.air_tickets.core.auth.user;
 
-public class UserContextImpl implements UserContext {
-    private final Long userId;
-    private final String email;
+import com.garryiv.air_tickets.core.services.user.User;
 
-    public UserContextImpl(Long userId, String email) {
-        this.userId = userId;
-        this.email = email;
+public class UserContextImpl implements UserContext {
+    private final User user;
+
+    public UserContextImpl(User user) {
+        this.user = user;
     }
 
     @Override
     public Long getUserId() {
-        return userId;
+        return user.getId();
     }
 
     @Override
     public String getEmail() {
-        return email;
+        return user.getEmail();
     }
 }

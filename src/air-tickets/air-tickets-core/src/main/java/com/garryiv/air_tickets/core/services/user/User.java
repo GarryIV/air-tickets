@@ -1,4 +1,4 @@
-package com.garryiv.air_tickets.core.user;
+package com.garryiv.air_tickets.core.services.user;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

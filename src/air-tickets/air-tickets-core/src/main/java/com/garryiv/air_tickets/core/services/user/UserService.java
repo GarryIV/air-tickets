@@ -1,10 +1,13 @@
-package com.garryiv.air_tickets.core.user;
+package com.garryiv.air_tickets.core.services.user;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This service is responsible for searching and managing public users.
+ */
 @Transactional
 @Service
 public class UserService {
