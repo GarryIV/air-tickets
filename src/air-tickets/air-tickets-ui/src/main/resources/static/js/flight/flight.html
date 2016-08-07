@@ -15,3 +15,7 @@
     </div>
     <button ng-click="controller.search()" type="submit" class="btn btn-primary">Search</button>
 </form>
+
+<div ng-repeat="flight in controller.flights">
+    {{flight}}
+</div>

@@ -53,8 +53,8 @@ public class FlightSpecs {
      */
     public static Specification<Flight> from(FlightSearch search) {
         return where(originEquals(search.getOrigin()))
-                .or(destinationEquals(search.getDestination()))
-                .or(departureBetween(search.getDepartureFrom(), search.getDepartureTo()));
+                .and(destinationEquals(search.getDestination()))
+                .and(departureBetween(search.getDepartureFrom(), search.getDepartureTo()));
     }
 
     private static Predicate equalIgnoreCase(CriteriaBuilder cb, Expression<String> x, String y) {
