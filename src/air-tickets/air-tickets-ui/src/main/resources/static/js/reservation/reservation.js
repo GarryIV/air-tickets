@@ -18,4 +18,12 @@ angular.module('reservation', []).controller('reservationNew', function($http,  
 
 
     return reservation;
+}).controller('reservationMy', function($http) {
+    var reservation = {};
+
+    $http.get('api/my-reservation').then(function (response) {
+        reservation.reservations = response.data;
+    });
+
+    return reservation;
 });

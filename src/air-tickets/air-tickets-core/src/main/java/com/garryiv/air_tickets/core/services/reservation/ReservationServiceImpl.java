@@ -1,5 +1,6 @@
 package com.garryiv.air_tickets.core.services.reservation;
 
+import com.garryiv.air_tickets.api.flight.FlightInfo;
 import com.garryiv.air_tickets.api.flight.FlightService;
 import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationRequest;
@@ -12,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,10 +33,20 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public ReservationInfo create(@RequestBody ReservationRequest request) {
+        FlightInfo flightInfo = flightService.find(request.getFlightId());
+
         Reservation reservation = new Reservation();
         BeanUtils.copyProperties(request, reservation);
+
         reservation.setStatus(ReservationStatus.CREATED);
-        reservation.setPrice(getPrice(request));
+
+        // copy info from the flight
+        reservation.setFlightNumber(flightInfo.getFlightNumber());
+        reservation.setPrice(flightInfo.getPrice());
+        reservation.setOrigin(flightInfo.getOrigin());
+        reservation.setDestination(flightInfo.getDestination());
+        reservation.setDeparture(flightInfo.getDeparture());
+        reservation.setArrival(flightInfo.getArrival());
 
         reservation = reservationRepository.save(reservation);
 
@@ -54,9 +64,5 @@ public class ReservationServiceImpl implements ReservationService {
         ReservationInfo info = new ReservationInfo();
         BeanUtils.copyProperties(reservation, info);
         return info;
-    }
-
-    private BigDecimal getPrice(ReservationRequest request) {
-        return flightService.find(request.getFlightId()).getPrice();
     }
 }
