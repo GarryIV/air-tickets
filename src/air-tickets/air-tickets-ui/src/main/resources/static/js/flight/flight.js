@@ -31,5 +31,13 @@ angular.module('flight', []).controller('flight', function($http) {
         })
     };
 
+    flight.reserveTicket = function (flight) {
+        console.log("Reserve a ticket " + flight);
+    };
+
+    flight.cancelFlight = function (flight) {
+        console.log("Cancel the flight " + flight);
+    };
+
     return flight;
 });
