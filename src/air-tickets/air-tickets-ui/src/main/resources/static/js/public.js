@@ -16,16 +16,12 @@ angular
 						controller : 'flight',
 						controllerAs : 'controller'
 					}).when('/user/reservation/create/:flightId', {
-						templateUrl : 'js/reservation/new-reservation.html',
+						templateUrl : 'js/reservation/reservation-new.html',
 						controller : 'reservationNew',
 						controllerAs : 'controller'
 					}).when('/user/reservation', {
 						templateUrl : 'js/reservation/reservations.html',
 						controller : 'reservationMy',
-						controllerAs : 'controller'
-					}).when('/user/reservation/:id', {
-						templateUrl : 'js/reservation/view-reservation.html',
-						controller : 'reservationView',
 						controllerAs : 'controller'
 					}).otherwise('/');
 

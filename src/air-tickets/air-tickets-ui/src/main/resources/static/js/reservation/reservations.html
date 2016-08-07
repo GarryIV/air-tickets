@@ -15,7 +15,11 @@
                 Status {{reservation.status}}
             </div>
             <div class="panel-body">
-                <a href="/user/reservation/{{reservation.id}}"  class="btn btn-primary" role="button">View</a>
+                <button ng-click="controller.pay(flight)"
+                        ng-show="reservation.status == 'CREATED'"
+                        class="btn btn-primary">
+                    Pay
+                </button>
             </div>
         </div>
     </div>

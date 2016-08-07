@@ -7,7 +7,7 @@ angular.module('reservation', []).controller('reservationNew', function($http,  
 
     reservation.reserve = function () {
         $http.put('/api/my-reservation/flight/' + reservation.flight.id).then(function (response) {
-            $location.path('/user/reservation/' + response.data.id);
+            $location.path('/user/reservation');
         });
     };
 
