@@ -1,4 +1,4 @@
-package com.garryiv.air_tickets.ui;
+package com.garryiv.air_tickets.ui.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

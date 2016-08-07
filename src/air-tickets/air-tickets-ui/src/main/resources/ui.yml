@@ -45,13 +45,6 @@ core:
   ribbon:
     listOfServers: ${core.host-port}
 
-zuul:
-  routes:
-    core:
-      path: /core/**
-      url: ${core.location}
-      sensitiveHeaders:
-
 logging:
   level:
     org.springframework.security: DEBUG

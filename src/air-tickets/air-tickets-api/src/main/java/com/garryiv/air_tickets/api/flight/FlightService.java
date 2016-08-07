@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@RequestMapping("/api/flight")
 public interface FlightService {
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, value = "/api/flight")
     List<FlightInfo> findAll(@RequestBody FlightSearch search);
 }

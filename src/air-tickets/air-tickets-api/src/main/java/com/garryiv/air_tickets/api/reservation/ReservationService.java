@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@RequestMapping("/api/reservation")
 public interface ReservationService {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/user/{userId}")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/user/{userId}")
     List<ReservationInfo> findCurrentReservations(@PathVariable("userId") Long userId);
 }

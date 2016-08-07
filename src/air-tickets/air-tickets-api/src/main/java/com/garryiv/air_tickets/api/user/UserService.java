@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * This service is responsible for searching and managing public users.
  */
-@RequestMapping("/api/user")
 public interface UserService {
 
     /**
@@ -15,6 +14,6 @@ public interface UserService {
      * @param email email to search user
      * @return user
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/email/{email}")
+    @RequestMapping(method = RequestMethod.GET, value = "/api/user/email/{email}")
     UserInfo findOrCreate(@PathVariable("email") String email);
 }

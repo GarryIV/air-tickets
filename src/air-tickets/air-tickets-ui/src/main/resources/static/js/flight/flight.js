@@ -1,3 +1,13 @@
 angular.module('flight', []).controller('flight', function($http) {
-    var self = this;
+    var flight = {
+        filter: {
+            from: 'CDG',
+            to: 'JFK'
+        },
+        search: function () {
+
+        }
+    };
+
+    return flight;
 });
