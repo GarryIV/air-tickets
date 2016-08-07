@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FlightServiceImplTest {
-
     @Autowired
     private FlightService flightService;
 
@@ -29,6 +28,49 @@ public class FlightServiceImplTest {
 
     @Test
     public void findAll() {
+        Flight testFlight = makeTestFlight();
+
+        FlightSearch search = new FlightSearch();
+        search.setOrigin(testFlight.getOrigin());
+        search.setDestination(testFlight.getDestination());
+        search.setDepartureFrom(DateUtils.addDays(testFlight.getDeparture(), -1));
+        search.setDepartureTo(DateUtils.addDays(testFlight.getDeparture(), 1));
+
+        List<FlightInfo> flights = flightService.findAll(search);
+        assertNotNull(flights);
+        assertEquals(1, flights.size());
+        FlightInfo first = flights.get(0);
+        checkEquals(testFlight, first);
+    }
+
+    @Test
+    public void find() throws Exception {
+        Flight testFlight = makeTestFlight();
+        FlightInfo info = flightService.find(testFlight.getId());
+        checkEquals(testFlight, info);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findByNull() {
+        flightService.find(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findNonExisting() {
+        flightService.find(Long.MAX_VALUE);
+    }
+
+    private void checkEquals(Flight expected, FlightInfo actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getOrigin(), actual.getOrigin());
+        assertEquals(expected.getDestination(), actual.getDestination());
+        assertEquals(expected.getDeparture(), actual.getDeparture());
+        assertEquals(expected.getArrival(), actual.getArrival());
+        assertEquals(expected.getFlightNumber(), actual.getFlightNumber());
+        assertTrue(expected.getPrice().compareTo(actual.getPrice()) == 0);
+    }
+
+    private Flight makeTestFlight() {
         Flight exampleFlight = new Flight();
         exampleFlight.setFlightNumber("YY333");
         exampleFlight.setDeparture(DateUtils.truncate(new Date(), Calendar.MINUTE));
@@ -39,24 +81,7 @@ public class FlightServiceImplTest {
         exampleFlight.setStatus(FlightStatus.SCHEDULED);
         flightRepository.save(exampleFlight);
         exampleFlight = flightRepository.findOne(exampleFlight.getId());
-
-        FlightSearch search = new FlightSearch();
-        search.setOrigin(exampleFlight.getOrigin());
-        search.setDestination(exampleFlight.getDestination());
-        search.setDepartureFrom(DateUtils.addDays(exampleFlight.getDeparture(), -1));
-        search.setDepartureTo(DateUtils.addDays(exampleFlight.getDeparture(), 1));
-
-        List<FlightInfo> flights = flightService.findAll(search);
-        assertNotNull(flights);
-        assertEquals(1, flights.size());
-        FlightInfo first = flights.get(0);
-        assertEquals(exampleFlight.getId(), first.getId());
-        assertEquals(exampleFlight.getOrigin(), first.getOrigin());
-        assertEquals(exampleFlight.getDestination(), first.getDestination());
-        assertEquals(exampleFlight.getDeparture(), first.getDeparture());
-        assertEquals(exampleFlight.getArrival(), first.getArrival());
-        assertEquals(exampleFlight.getFlightNumber(), first.getFlightNumber());
-        assertTrue(exampleFlight.getPrice().compareTo(first.getPrice()) == 0);
+        return exampleFlight;
     }
 
 }

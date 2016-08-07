@@ -6,8 +6,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
+/**
+ * Manages reservations.
+ */
 public interface ReservationService {
 
+    /**
+     * Create a new reservation upon user request
+     * @param reservationRequest reservation request
+     * @return new reservation
+     */
+    @RequestMapping(method = RequestMethod.PUT, value = "/api/reservation")
+    ReservationInfo create(ReservationRequest reservationRequest);
+
+    /**
+     * Find all user reservations
+     * @param userId
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/user/{userId}")
     List<ReservationInfo> findCurrentReservations(@PathVariable("userId") Long userId);
 }

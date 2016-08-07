@@ -26,6 +26,7 @@ public class Flight extends EntitySupport {
 
     private BigDecimal price;
 
+    @Enumerated(EnumType.STRING)
     private FlightStatus status;
 
     public Long getId() {

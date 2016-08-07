@@ -1,9 +1,10 @@
 package com.garryiv.air_tickets.core.services.reservation;
 
+import com.garryiv.air_tickets.api.reservation.ReservationStatus;
 import com.garryiv.air_tickets.core.services.EntitySupport;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "RESERVATION_TBL")
@@ -14,12 +15,15 @@ public class Reservation extends EntitySupport {
     private Long id;
 
     @Column(name = "flight_id")
-    @NotNull
     private Long flightId;
 
     @Column(name = "user_id")
-    @NotNull
     private Long userId;
+
+    private BigDecimal price;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status;
 
     public Long getId() {
         return id;
@@ -43,5 +47,21 @@ public class Reservation extends EntitySupport {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public ReservationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReservationStatus status) {
+        this.status = status;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

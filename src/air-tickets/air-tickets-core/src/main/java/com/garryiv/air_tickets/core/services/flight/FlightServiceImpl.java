@@ -31,7 +31,20 @@ public class FlightServiceImpl implements FlightService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public FlightInfo find(Long flightId) {
+        if (flightId == null) {
+            throw new IllegalArgumentException("Flight can not be null");
+        }
+
+        return toFlightInfo(flightRepository.findOne(flightId));
+    }
+
     private FlightInfo toFlightInfo(Flight flight) {
+        if (flight == null) {
+            throw new IllegalArgumentException("Flight can not be null");
+        }
+
         FlightInfo flightInfo = new FlightInfo();
         BeanUtils.copyProperties(flight, flightInfo);
         return flightInfo;
