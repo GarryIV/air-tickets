@@ -19,12 +19,14 @@ angular.module('flight', []).controller('flight', function($http) {
         var from = new Date(filter.departure.setHours(0,0,0,0));
         var to = addDays(from, 1);
 
-        $http.post('/api/flight/search', {
+        var query = {
             origin: filter.origin,
             destination: filter.destination,
             departureFrom: from,
             departureTo: to
-        }).then(function (response) {
+        };
+        $http.post('/api/flight/search', query).then(function (response) {
+            flight.query = query;
             flight.flights = response.data;
         })
     };

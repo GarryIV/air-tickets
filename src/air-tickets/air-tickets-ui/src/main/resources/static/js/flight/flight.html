@@ -16,6 +16,22 @@
     <button ng-click="controller.search()" type="submit" class="btn btn-primary">Search</button>
 </form>
 
-<div ng-repeat="flight in controller.flights">
-    {{flight}}
+<div ng-show="controller.flights.length">
+    <h2>Flights from {{controller.query.origin}} to {{controller.query.destination}}</h2>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Flight Number</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="flight in controller.flights">
+            <td>{{flight.departure | date:'short'}}</td>
+            <td>{{flight.arrival | date:'short'}}</td>
+            <td>{{flight.flightNumber}}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
