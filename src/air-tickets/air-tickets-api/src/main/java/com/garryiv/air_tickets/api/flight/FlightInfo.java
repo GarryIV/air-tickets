@@ -1,8 +1,11 @@
 package com.garryiv.air_tickets.api.flight;
 
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
+@ToString
 public class FlightInfo {
     private Long id;
 

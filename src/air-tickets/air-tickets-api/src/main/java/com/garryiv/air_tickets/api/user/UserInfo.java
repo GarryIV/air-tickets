@@ -1,5 +1,8 @@
 package com.garryiv.air_tickets.api.user;
 
+import lombok.ToString;
+
+@ToString
 public class UserInfo {
     private Long id;
     private String email;

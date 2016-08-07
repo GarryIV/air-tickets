@@ -1,6 +1,6 @@
 package com.garryiv.air_tickets.core.services.flight;
 
-import com.garryiv.air_tickets.core.services.EntitySupport;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -8,7 +8,8 @@ import java.util.Date;
 
 @Entity
 @Table(name = "FLIGHT_TBL")
-public class Flight extends EntitySupport {
+@ToString
+public class Flight {
     @Id
     @Column(name = "flight_id")
     @GeneratedValue

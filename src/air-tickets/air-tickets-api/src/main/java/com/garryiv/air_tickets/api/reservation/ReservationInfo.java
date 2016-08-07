@@ -1,7 +1,10 @@
 package com.garryiv.air_tickets.api.reservation;
 
+import lombok.ToString;
+
 import java.math.BigDecimal;
 
+@ToString
 public class ReservationInfo {
     private Long id;
     private Long flightId;

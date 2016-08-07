@@ -1,14 +1,15 @@
 package com.garryiv.air_tickets.core.services.reservation;
 
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
-import com.garryiv.air_tickets.core.services.EntitySupport;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
+@ToString
 @Entity
 @Table(name = "RESERVATION_TBL")
-public class Reservation extends EntitySupport {
+public class Reservation {
     @Id
     @Column(name = "reservation_id")
     @GeneratedValue

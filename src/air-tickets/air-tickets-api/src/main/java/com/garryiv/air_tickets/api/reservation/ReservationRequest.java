@@ -1,5 +1,8 @@
 package com.garryiv.air_tickets.api.reservation;
 
+import lombok.ToString;
+
+@ToString
 public class ReservationRequest {
     private Long flightId;
     private Long userId;

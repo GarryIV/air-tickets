@@ -1,12 +1,14 @@
 package com.garryiv.air_tickets.core.services.user;
 
-import com.garryiv.air_tickets.core.services.EntitySupport;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "USER_TBL")
-public class User extends EntitySupport {
+@ToString
+
+public class User {
     @Id
     @Column(name = "user_id")
     @GeneratedValue
