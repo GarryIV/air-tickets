@@ -21,8 +21,8 @@ public interface ReservationService {
 
     /**
      * Find all user reservations
-     * @param userId
-     * @return
+     * @param userId owner's user ir
+     * @return users reservation in order they created, descending
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/user/{userId}")
     List<ReservationInfo> findCurrentReservations(@PathVariable("userId") Long userId);
