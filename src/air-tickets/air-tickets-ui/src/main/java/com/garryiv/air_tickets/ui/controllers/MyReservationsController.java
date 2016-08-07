@@ -12,7 +12,7 @@ import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
-@RequestMapping("/my-reservation")
+@RequestMapping("/api/my-reservation")
 @RolesAllowed(Roles.PUBLIC)
 public class MyReservationsController {
 
