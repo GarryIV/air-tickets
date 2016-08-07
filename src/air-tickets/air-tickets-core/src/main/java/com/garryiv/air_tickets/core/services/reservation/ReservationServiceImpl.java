@@ -8,6 +8,7 @@ import com.garryiv.air_tickets.api.reservation.ReservationService;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -23,12 +24,17 @@ import java.util.stream.Collectors;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
+    private final ApplicationEventPublisher eventPublisher;
+
     private final ReservationRepository reservationRepository;
 
     private final FlightService flightService;
 
     @Autowired
-    public ReservationServiceImpl(ReservationRepository reservationRepository, FlightService flightService) {
+    public ReservationServiceImpl(ApplicationEventPublisher eventPublisher,
+                                  ReservationRepository reservationRepository,
+                                  FlightService flightService) {
+        this.eventPublisher = eventPublisher;
         this.reservationRepository = reservationRepository;
         this.flightService = flightService;
     }
@@ -69,6 +75,14 @@ public class ReservationServiceImpl implements ReservationService {
         Assert.notNull(userId, "userId");
         Assert.notNull(reservationId, "reservationId");
         return toInfo(reservationRepository.findByIdAndUserId(reservationId, userId));
+    }
+
+    @Override
+    public void cancelUserReservation(@PathVariable Long userId, @PathVariable Long reservationId) {
+        Reservation reservation = reservationRepository.findByIdAndUserId(reservationId, userId);
+        reservation.setStatus(ReservationStatus.CANCELLED);
+        reservationRepository.save(reservation);
+        eventPublisher.publishEvent(new ReservationCancelledEvent(toInfo(reservation)));
     }
 
     private ReservationInfo toInfo(Reservation reservation) {

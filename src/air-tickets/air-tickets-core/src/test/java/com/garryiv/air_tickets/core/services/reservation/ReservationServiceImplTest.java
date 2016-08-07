@@ -85,6 +85,13 @@ public class ReservationServiceImplTest {
         reservationService.findUserReservation(1L, null);
     }
 
+    @Test
+    public void cancelUserReservation() throws Exception {
+        UserInfo userInfo = userService.findOrCreate("test@email");
+        ReservationInfo reservation = createReservation(userInfo);
+        reservationService.cancelUserReservation(userInfo.getId(), reservation.getId());
+    }
+
     private void checkNewReservation(UserInfo userInfo, ReservationInfo reservation) {
         assertNotNull(reservation);
         assertNotNull(reservation.getId());

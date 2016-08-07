@@ -35,5 +35,16 @@ public interface ReservationService {
      * @return reservation
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/user/{userId}/{reservationId}")
-    ReservationInfo findUserReservation(@PathVariable("userId") Long userId, @PathVariable("reservationId")  Long reservationId);
+    ReservationInfo findUserReservation(@PathVariable("userId") Long userId,
+                                        @PathVariable("reservationId")  Long reservationId);
+
+    /**
+     * Cancel user's reservation or throw exception if reservationId not found, belongs to different userId
+     * or it's in inappropriate state
+     * @param userId user id
+     * @param reservationId reservation id
+     */
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/reservation/user/{userId}/{reservationId}")
+    void cancelUserReservation(@PathVariable("userId") Long userId,
+                               @PathVariable("reservationId")  Long reservationId);
 }
