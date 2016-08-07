@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Transactional
@@ -44,7 +44,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<ReservationInfo> findCurrentReservations(Long userId) {
-        return new ArrayList<>();
+        return reservationRepository.findByUserIdOrderByIdDesc(userId)
+                .map(reservation -> toInfo(reservation))
+                .collect(Collectors.toList());
     }
 
     private ReservationInfo toInfo(Reservation reservation) {
