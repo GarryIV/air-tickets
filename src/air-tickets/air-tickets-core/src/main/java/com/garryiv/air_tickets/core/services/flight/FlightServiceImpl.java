@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<FlightInfo> findAll(FlightSearch search) {
+    public List<FlightInfo> findAll(@RequestBody FlightSearch search) {
         return flightRepository.findAll(FlightSpecs.from(search))
                 .map(flight -> toFlightInfo(flight))
                 .collect(Collectors.toList());
