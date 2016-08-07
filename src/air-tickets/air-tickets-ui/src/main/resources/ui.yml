@@ -40,11 +40,6 @@ oauth2-providers:
       userInfoUri: https://graph.facebook.com/me?fields=name,email
 
 core:
-  host-port: localhost:9999
-  location: http://${core.host-port}
   ribbon:
-    listOfServers: ${core.host-port}
+    listOfServers: localhost:9999
 
-logging:
-  level:
-    org.springframework.security: DEBUG
