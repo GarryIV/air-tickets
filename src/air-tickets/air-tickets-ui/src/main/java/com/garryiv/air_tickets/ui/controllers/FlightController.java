@@ -4,10 +4,7 @@ import com.garryiv.air_tickets.api.flight.FlightInfo;
 import com.garryiv.air_tickets.api.flight.FlightSearch;
 import com.garryiv.air_tickets.api.flight.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,4 +23,10 @@ public class FlightController {
     public List<FlightInfo> findAll(@RequestBody FlightSearch search) {
         return flightService.findAll(search);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{flightId}")
+    public FlightInfo find(@PathVariable("flightId") Long flightId) {
+        return flightService.find(flightId);
+    }
+
 }

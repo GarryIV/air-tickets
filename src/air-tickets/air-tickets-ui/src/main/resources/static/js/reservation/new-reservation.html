@@ -1,0 +1,25 @@
+<h1 class="page-header">New Reservation</h1>
+
+<div class="row">
+    <div class="col-md-3">Flight Number:</div>
+    <div class="col-md-9">{{controller.flight.flightNumber}}</div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">From:</div>
+    <div class="col-md-9">{{controller.flight.origin}} - {{controller.flight.departure | date:'short'}}</div>
+    <div class="col-md-9"></div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">To:</div>
+    <div class="col-md-9">{{controller.flight.destination}} - {{controller.flight.arrival | date:'short'}}</div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">Price:</div>
+    <div class="col-md-9">{{controller.flight.price | currency: "$"}}</div>
+</div>
+
+<button type="button" class="btn btn-primary">Reserve</button>
+<a class="btn btn-default" href="/flight" role="button">Cancel</a>

@@ -1,6 +1,9 @@
-angular.module('reservation', []).controller('reservation', function($http,  $routeParams) {
+angular.module('reservation', []).controller('reservationNew', function($http,  $routeParams) {
     var reservation = {};
-    reservation.name = 'reservation';
-    reservation.flightId = $routeParams.flightId
+
+    $http.get('/api/flight/' + $routeParams.flightId).then(function (response) {
+        reservation.flight = response.data;
+    });
+
     return reservation;
 });

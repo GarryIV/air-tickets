@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,7 +33,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public FlightInfo find(Long flightId) {
+    public FlightInfo find(@PathVariable Long flightId) {
         if (flightId == null) {
             throw new IllegalArgumentException("Flight can not be null");
         }

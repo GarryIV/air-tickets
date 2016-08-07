@@ -16,8 +16,8 @@ angular
 						controller : 'flight',
 						controllerAs : 'controller'
 					}).when('/user/reservation/create/:flightId', {
-						templateUrl : 'js/reservation/reservation.html',
-						controller : 'reservation',
+						templateUrl : 'js/reservation/new-reservation.html',
+						controller : 'reservationNew',
 						controllerAs : 'controller'
 					}).otherwise('/');
 
