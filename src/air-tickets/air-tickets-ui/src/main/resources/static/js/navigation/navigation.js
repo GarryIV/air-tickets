@@ -1,13 +1,11 @@
-angular.module('navigation', ['ngRoute']).controller(
-    'navigation',
+angular.module('navigation', ['ngRoute']).controller('navigation', function($route) {
 
-    function($route) {
+    var controller = {
+    };
 
-        var self = this;
+    controller.tab = function(route) {
+        return $route.current && route === $route.current.controller;
+    };
 
-        self.credentials = {};
-
-        self.tab = function(route) {
-            return $route.current && route === $route.current.controller;
-        };
-    });
+    return controller;
+});

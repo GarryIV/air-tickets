@@ -1,36 +1,40 @@
 angular.module('reservation', []).controller('reservationNew', function($http,  $routeParams, $location) {
-    var reservation = {};
+    var controller = {};
 
     $http.get('/api/flight/' + $routeParams.flightId).then(function (response) {
-        reservation.flight = response.data;
+        controller.flight = response.data;
     });
 
-    reservation.reserve = function () {
-        $http.put('/api/my-reservation/flight/' + reservation.flight.id).then(function (response) {
+    controller.reserve = function () {
+        $http.put('/api/my-reservation/flight/' + controller.flight.id).then(function (response) {
             $location.path('/user/reservation');
         });
     };
 
-    return reservation;
+    return controller;
 
 }).controller('reservationView', function($http,  $routeParams, $location) {
-    var reservation = {};
+    var controller = {};
 
     $http.get('/api/my-reservation/' + $routeParams.id).then(function (response) {
-        reservation.reservation = response.data;
+        controller.reservation = response.data;
     });
 
-    return reservation;
+    return controller;
 }).controller('reservationMy', function($http) {
-    var reservation = {};
+    var controller = {};
 
     $http.get('api/my-reservation').then(function (response) {
-        reservation.reservations = response.data;
+        controller.reservations = response.data;
     });
 
-    reservation.pay = function () {
+    controller.pay = function (reservation) {
 
     };
 
-    return reservation;
+    controller.cancel = function (reservation) {
+
+    };
+
+    return controller;
 });

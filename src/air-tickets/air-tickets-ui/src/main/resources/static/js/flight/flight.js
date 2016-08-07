@@ -1,5 +1,5 @@
 angular.module('flight', []).controller('flight', function($http) {
-    var flight = {
+    var controller = {
         filter: {
             origin: 'CDG',
             destination: 'JFK',
@@ -14,8 +14,8 @@ angular.module('flight', []).controller('flight', function($http) {
         return result;
     }
 
-    flight.search = function () {
-        var filter = flight.filter;
+    controller.search = function () {
+        var filter = controller.filter;
         var from = new Date(filter.departure.setHours(0,0,0,0));
         var to = addDays(from, 1);
 
@@ -26,14 +26,14 @@ angular.module('flight', []).controller('flight', function($http) {
             departureTo: to
         };
         $http.post('/api/flight/search', query).then(function (response) {
-            flight.query = query;
-            flight.flights = response.data;
+            controller.query = query;
+            controller.flights = response.data;
         })
     };
 
-    flight.cancelFlight = function (flight) {
+    controller.cancelFlight = function (flight) {
         console.log("Cancel the flight " + flight);
     };
 
-    return flight;
+    return controller;
 });
