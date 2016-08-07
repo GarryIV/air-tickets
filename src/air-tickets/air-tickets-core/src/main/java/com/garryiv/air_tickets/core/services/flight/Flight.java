@@ -3,7 +3,7 @@ package com.garryiv.air_tickets.core.services.flight;
 import com.garryiv.air_tickets.core.services.EntitySupport;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
@@ -24,8 +24,9 @@ public class Flight extends EntitySupport {
 
     private String flightNumber;
 
-    @Version
-    private Timestamp version;
+    private BigDecimal price;
+
+    private FlightStatus status;
 
     public Long getId() {
         return id;
@@ -33,14 +34,6 @@ public class Flight extends EntitySupport {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Timestamp getVersion() {
-        return version;
-    }
-
-    public void setVersion(Timestamp version) {
-        this.version = version;
     }
 
     public String getOrigin() {
@@ -81,5 +74,21 @@ public class Flight extends EntitySupport {
 
     public void setArrival(Date arrival) {
         this.arrival = arrival;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public FlightStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FlightStatus status) {
+        this.status = status;
     }
 }

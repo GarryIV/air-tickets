@@ -1,5 +1,6 @@
 package com.garryiv.air_tickets.api.flight;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class FlightInfo {
@@ -14,6 +15,8 @@ public class FlightInfo {
     private Date arrival;
 
     private String flightNumber;
+
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -61,5 +64,13 @@ public class FlightInfo {
 
     public void setFlightNumber(String flightNumber) {
         this.flightNumber = flightNumber;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }
