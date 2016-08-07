@@ -13,5 +13,5 @@
         <label>Departure</label>
         <input type="date" class="form-control" placeholder="JFK" ng-model="controller.filter.departure">
     </div>
-    <button type="submit" class="btn btn-primary">Search</button>
+    <button ng-click="controller.search()" type="submit" class="btn btn-primary">Search</button>
 </form>

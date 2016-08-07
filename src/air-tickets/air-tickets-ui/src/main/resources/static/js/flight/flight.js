@@ -5,9 +5,13 @@ angular.module('flight', []).controller('flight', function($http) {
             to: 'JFK',
             departure: new Date()
         },
-        search: function () {
+        flights: null
+    };
 
-        }
+    flight.search = function () {
+        $http.post('/api/flight/search', flight.filter).then(function () {
+            flight = response.data;
+        })
     };
 
     return flight;
