@@ -33,7 +33,7 @@ public class MyReservationsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public List<ReservationInfo> currentReservations() {
-        return reservationService.findCurrentReservations(userContext.getUserId());
+        return reservationService.findUserReservations(userContext.getUserId());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/flight/{flightId}")
@@ -43,4 +43,10 @@ public class MyReservationsController {
         request.setFlightId(flightId);
         return reservationService.create(request);
     }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    public ReservationInfo get(@PathVariable("id") Long reservationId) {
+        return reservationService.findUserReservation(userContext.getUserId(), reservationId);
+    }
+
 }

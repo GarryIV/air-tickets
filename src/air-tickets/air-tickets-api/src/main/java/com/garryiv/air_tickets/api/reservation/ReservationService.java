@@ -26,5 +26,14 @@ public interface ReservationService {
      * @return users reservation in order they created, descending
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/user/{userId}")
-    List<ReservationInfo> findCurrentReservations(@PathVariable("userId") Long userId);
+    List<ReservationInfo> findUserReservations(@PathVariable("userId") Long userId);
+
+    /**
+     * Find user's reservation or throw exception if reservationId not found or it belongs to different userId
+     * @param userId user id
+     * @param reservationId reservation id
+     * @return reservation
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/user/{userId}/{reservationId}")
+    ReservationInfo findUserReservation(@PathVariable("userId") Long userId, @PathVariable("reservationId")  Long reservationId);
 }

@@ -16,6 +16,9 @@ angular.module('reservation', []).controller('reservationNew', function($http,  
 }).controller('reservationView', function($http,  $routeParams, $location) {
     var reservation = {};
 
+    $http.get('/api/my-reservation/' + $routeParams.id).then(function (response) {
+        reservation.reservation = response.data;
+    });
 
     return reservation;
 }).controller('reservationMy', function($http) {

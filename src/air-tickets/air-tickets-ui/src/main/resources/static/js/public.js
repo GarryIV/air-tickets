@@ -20,7 +20,7 @@ angular
 						controller : 'reservationNew',
 						controllerAs : 'controller'
 					}).when('/user/reservation', {
-						templateUrl : 'js/reservation/my-reservations.html',
+						templateUrl : 'js/reservation/reservations.html',
 						controller : 'reservationMy',
 						controllerAs : 'controller'
 					}).when('/user/reservation/:id', {

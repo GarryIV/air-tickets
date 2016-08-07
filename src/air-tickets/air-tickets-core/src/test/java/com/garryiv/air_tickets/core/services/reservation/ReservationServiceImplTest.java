@@ -6,7 +6,6 @@ import com.garryiv.air_tickets.api.reservation.ReservationService;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
 import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ReservationServiceImplTest {
+
     // The first flight in data.sql
     public static final Long TEST_FLIGHT_ID = 1L;
 
@@ -32,11 +32,6 @@ public class ReservationServiceImplTest {
     @Autowired
     private UserService userService;
 
-    @Before
-    public void init() {
-
-    }
-
     @Test
     public void create() throws Exception {
         UserInfo userInfo = userService.findOrCreate("test@email");
@@ -45,11 +40,11 @@ public class ReservationServiceImplTest {
     }
 
     @Test
-    public void findCurrentReservations() throws Exception {
+    public void findUserReservations() throws Exception {
         UserInfo userInfo = userService.findOrCreate(UUID.randomUUID().toString() + "@email");
 
         // no reservations at the beginning
-        List<ReservationInfo> reservations = reservationService.findCurrentReservations(userInfo.getId());
+        List<ReservationInfo> reservations = reservationService.findUserReservations(userInfo.getId());
         assertNotNull(reservations);
         assertEquals(0, reservations.size());
 
@@ -57,11 +52,37 @@ public class ReservationServiceImplTest {
         createReservation(userInfo);
 
         // make sure it found
-        reservations = reservationService.findCurrentReservations(userInfo.getId());
+        reservations = reservationService.findUserReservations(userInfo.getId());
         assertNotNull(reservations);
         assertEquals(1, reservations.size());
         checkNewReservation(userInfo, reservations.get(0));
 
+    }
+
+    @Test
+    public void findUserReservation() throws Exception {
+        UserInfo userInfo1 = userService.findOrCreate("test1@email");
+        ReservationInfo reservation = createReservation(userInfo1);
+        ReservationInfo found = reservationService.findUserReservation(userInfo1.getId(), reservation.getId());
+        checkNewReservation(userInfo1, found);
+
+        UserInfo userInfo2 = userService.findOrCreate("test2@email");
+        try {
+            reservationService.findUserReservation(userInfo2.getId(), reservation.getId());
+            fail();
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findUserReservationNull1() throws Exception {
+        reservationService.findUserReservation(null, 1L);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findUserReservationNull2() throws Exception {
+        reservationService.findUserReservation(1L, null);
     }
 
     private void checkNewReservation(UserInfo userInfo, ReservationInfo reservation) {

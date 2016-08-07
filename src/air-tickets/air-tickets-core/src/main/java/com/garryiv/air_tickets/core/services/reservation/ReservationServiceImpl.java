@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,13 +56,24 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationInfo> findCurrentReservations(Long userId) {
+    public List<ReservationInfo> findUserReservations(@PathVariable Long userId) {
+        Assert.notNull(userId, "userId");
+
         return reservationRepository.findByUserIdOrderByIdDesc(userId)
                 .map(reservation -> toInfo(reservation))
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ReservationInfo findUserReservation(@PathVariable Long userId, @PathVariable Long reservationId) {
+        Assert.notNull(userId, "userId");
+        Assert.notNull(reservationId, "reservationId");
+        return toInfo(reservationRepository.findByIdAndUserId(reservationId, userId));
+    }
+
     private ReservationInfo toInfo(Reservation reservation) {
+        Assert.notNull(reservation, "reservation");
+
         ReservationInfo info = new ReservationInfo();
         BeanUtils.copyProperties(reservation, info);
         return info;

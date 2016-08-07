@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,8 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public List<FlightInfo> findAll(@RequestBody FlightSearch search) {
+        Assert.notNull(search, "search");
+
         return flightRepository.findAll(FlightSpecs.from(search))
                 .map(flight -> toFlightInfo(flight))
                 .collect(Collectors.toList());
@@ -34,17 +37,12 @@ public class FlightServiceImpl implements FlightService {
 
     @Override
     public FlightInfo find(@PathVariable Long flightId) {
-        if (flightId == null) {
-            throw new IllegalArgumentException("Flight can not be null");
-        }
-
+        Assert.notNull(flightId, "flightId");
         return toFlightInfo(flightRepository.findOne(flightId));
     }
 
     private FlightInfo toFlightInfo(Flight flight) {
-        if (flight == null) {
-            throw new IllegalArgumentException("Flight can not be null");
-        }
+        Assert.notNull(flight, "flight");
 
         FlightInfo flightInfo = new FlightInfo();
         BeanUtils.copyProperties(flight, flightInfo);

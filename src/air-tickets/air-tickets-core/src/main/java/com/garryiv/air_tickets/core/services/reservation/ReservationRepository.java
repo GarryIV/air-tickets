@@ -6,4 +6,6 @@ import java.util.stream.Stream;
 
 public interface ReservationRepository extends CrudRepository<Reservation, Long> {
     Stream<Reservation> findByUserIdOrderByIdDesc(Long userId);
+
+    Reservation findByIdAndUserId(Long id, Long userId);
 }

@@ -1,0 +1,23 @@
+<h1 class="page-header">Reservations</h1>
+
+<div ng-show="controller.reservations.length">
+    <div ng-repeat="reservation in controller.reservations">
+        <div class="panel panel-default">
+            <div class="panel-heading">Flight: {{reservation.flightNumber}}</div>
+            <div class="panel-body">
+                Departure {{reservation.origin}} - {{reservation.departure | date:'short'}} ->
+                Arrival {{reservation.destination}} {{reservation.arrival | date:'short'}}
+            </div>
+            <div class="panel-body">
+                Price {{reservation.price | currency:'$'}}
+            </div>
+            <div class="panel-body">
+                Status {{reservation.status}}
+            </div>
+            <div class="panel-body">
+                <a href="/user/reservation/{{reservation.id}}"  class="btn btn-primary" role="button">View</a>
+            </div>
+        </div>
+    </div>
+
+</div>
