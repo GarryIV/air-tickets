@@ -28,5 +28,9 @@ angular.module('reservation', []).controller('reservationNew', function($http,  
         reservation.reservations = response.data;
     });
 
+    reservation.pay = function () {
+
+    };
+
     return reservation;
 });
