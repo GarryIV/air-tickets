@@ -15,7 +15,7 @@ angular
 						templateUrl : 'js/flight/flight.html',
 						controller : 'flight',
 						controllerAs : 'controller'
-					}).when('/reservation', {
+					}).when('/user/reservation', {
 						templateUrl : 'js/reservation/reservation.html',
 						controller : 'reservation',
 						controllerAs : 'controller'

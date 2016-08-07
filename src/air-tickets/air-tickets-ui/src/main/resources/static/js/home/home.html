@@ -29,14 +29,13 @@
         </div>
         <form>
             <div class="form-group">
-                <label>Email address:
-                    <input type="email" class="form-control" placeholder="email"
+                <label>Email address:</label>
+                 <input type="email" class="form-control" placeholder="email"
                            ng-model="controller.auth().credentials.username">
-                </label>
-                <label>Password:
-                    <input type="password" class="form-control" placeholder="password"
+
+                <label>Password:</label>
+                <input type="password" class="form-control" placeholder="password"
                            ng-model="controller.auth().credentials.password">
-                </label>
             </div>
             <button ng-click="controller.auth().loginStaff()" class="btn btn-default">Submit</button>
         </form>
