@@ -2,13 +2,11 @@ package com.garryiv.air_tickets.core;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.web.servlet.ServletContextInitializer;
-import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableTransactionManagement(proxyTargetClass = true)
+@EnableTransactionManagement
 @EnableJpaRepositories
 public class CoreApplication  {
 
@@ -19,9 +17,4 @@ public class CoreApplication  {
 				.build()
 				.run(args);
 	}
-
-    @Bean
-    public ServletContextInitializer servletContextInitializer() {
-        return servletContext -> servletContext.getSessionCookieConfig().setName("CORE_SESSION_ID");
-    }
 }
