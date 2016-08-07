@@ -19,6 +19,10 @@ angular
 						templateUrl : 'js/reservation/new-reservation.html',
 						controller : 'reservationNew',
 						controllerAs : 'controller'
+					}).when('/user/reservation/:id', {
+						templateUrl : 'js/reservation/view-reservation.html',
+						controller : 'reservationView',
+						controllerAs : 'controller'
 					}).otherwise('/');
 
 					$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

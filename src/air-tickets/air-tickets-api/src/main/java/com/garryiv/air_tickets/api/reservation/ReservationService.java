@@ -1,6 +1,7 @@
 package com.garryiv.air_tickets.api.reservation;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -17,7 +18,7 @@ public interface ReservationService {
      * @return new reservation
      */
     @RequestMapping(method = RequestMethod.PUT, value = "/api/reservation")
-    ReservationInfo create(ReservationRequest reservationRequest);
+    ReservationInfo create(@RequestBody ReservationRequest reservationRequest);
 
     /**
      * Find all user reservations

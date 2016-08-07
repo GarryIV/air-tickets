@@ -1,4 +1,4 @@
-angular.module('auth', []).factory('auth', function($http, $httpParamSerializer, $window) {
+angular.module('auth', []).factory('auth', function($http, $httpParamSerializer, $window, $rootScope) {
 
     var auth = {
         name: 'auth',
@@ -51,6 +51,8 @@ angular.module('auth', []).factory('auth', function($http, $httpParamSerializer,
     }
 
     checkAuthentication();
+
+    $rootScope.auth = auth;
 
     return auth;
 });

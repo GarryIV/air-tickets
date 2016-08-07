@@ -10,15 +10,4 @@ angular.module('navigation', ['ngRoute']).controller(
         self.tab = function(route) {
             return $route.current && route === $route.current.controller;
         };
-
-        self.authenticated = function() {
-        }
-
-        self.login = function() {
-        };
-
-        self.logout = function () {
-
-        };
-
     });

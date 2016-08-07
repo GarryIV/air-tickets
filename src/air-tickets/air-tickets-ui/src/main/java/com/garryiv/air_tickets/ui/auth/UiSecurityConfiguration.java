@@ -69,7 +69,7 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .successForwardUrl("/login/staff/success")
                 .and()
                     .antMatcher("/**").authorizeRequests()
-                    .antMatchers("/", "/login**", "/webjars/**").permitAll()
+                    .antMatchers("/", "/login**", "/flight", "/api/**", "/webjars/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))

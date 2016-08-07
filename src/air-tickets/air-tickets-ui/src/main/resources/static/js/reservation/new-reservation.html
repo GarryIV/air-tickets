@@ -21,5 +21,5 @@
     <div class="col-md-9">{{controller.flight.price | currency: "$"}}</div>
 </div>
 
-<button type="button" class="btn btn-primary">Reserve</button>
+<button ng-click="controller.reserve()" type="button" class="btn btn-primary">Reserve</button>
 <a class="btn btn-default" href="/flight" role="button">Cancel</a>

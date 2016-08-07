@@ -18,10 +18,12 @@
 <body ng-app="public" ng-cloak class="ng-cloak">
 <div ng-controller="navigation as nav" class="container">
     <ul class="nav nav-pills" role="tablist">
-        <li ng-class="{active:nav.tab('home')}"><a href="/">home</a></li>
-        <li ng-class="{active:nav.tab('flight')}"><a href="/flight">flight</a></li>
-        <li ng-class="{active:nav.tab('reservation')}"><a href="/reservation">reservation</a></li>
-        <!--<li ng-show="nav.authenticated()"><a href="" ng-click="nav.logout()">logout</a></li>-->
+        <li ng-class="{active:nav.tab('home')}"><a href="/">Home</a></li>
+        <li ng-class="{active:nav.tab('flight')}"><a href="/flight">Flights</a></li>
+        <li ng-show="auth.authenticated" ng-class="{active:nav.tab('/user/reservation')}">
+            <a href="/user/reservation">My Reservations</a>
+        </li>
+        <li ng-show="auth.authenticated"><a href="" ng-click="auth.logout()">Logout</a></li>
     </ul>
 </div>
 <div ng-view class="container" style="padding-top: 10px"></div>
