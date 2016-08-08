@@ -37,4 +37,24 @@ angular.module('reservation', []).controller('reservationNew', function($http,  
     };
 
     return controller;
+}).controller('reservationStaff', function($http, $routeParams) {
+    var controller = {};
+
+    var refresh = function() {
+        $http.get('api/reservation/flight/' + $routeParams.flightId).then(function (response) {
+            controller.reservations = response.data;
+        });
+    };
+
+    refresh();
+
+    controller.canPay = function (reservation) {
+        return false;
+    };
+
+    controller.cancel = function (reservation) {
+        $http.delete('api/reservation/' + reservation.id).then(refresh);
+    };
+
+    return controller;
 });

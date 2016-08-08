@@ -91,6 +91,19 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
+    public List<ReservationInfo> findByFlight(Long flightId) {
+        return reservationRepository.findByFlightIdOrderByIdDesc(flightId)
+            .map(this::toInfo)
+            .collect(Collectors.toList());
+    }
+
+    @Override
+    public void cancel(Long reservationId) {
+        Assert.notNull(reservationId, "reservationId");
+        doCancel(reservationRepository.findOne(reservationId));
+    }
+
+    @Override
     @Transactional
     public List<ReservationInfo> findReservationsForCheckIn(Date from) {
         Date latestCheckIn = DateUtils.addHours(new Date(), LATEST_CHECK_IN);
@@ -107,6 +120,12 @@ public class ReservationServiceImpl implements ReservationService {
         FlightInfo flight = event.getFlight();
         reservationRepository.findByFlightIdAndStatusNot(flight.getId(), ReservationStatus.CANCELLED)
                 .forEach(this::doCancel);
+    }
+
+    @Override
+    public ReservationInfo find(Long reservationId) {
+        Assert.notNull(reservationId, "reservationId");
+        return toInfo(reservationRepository.findOne(reservationId));
     }
 
     private void doCancel(Reservation reservation) {

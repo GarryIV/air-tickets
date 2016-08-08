@@ -23,4 +23,11 @@ public interface ReservationService extends com.garryiv.air_tickets.api.reservat
      */
     @EventListener
     void handleFlightCancelledEvent(FlightCancelledEvent event);
+
+    /**
+     * Find reservation by id
+     * @param reservationId id
+     * @return id
+     */
+    ReservationInfo find(Long reservationId);
 }

@@ -49,4 +49,8 @@ public class MyReservationsController {
         return reservationService.findUserReservation(userContext.getUserId(), reservationId);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public void cancel(@PathVariable("id") Long reservationId) {
+        reservationService.cancelUserReservation(userContext.getUserId(), reservationId);
+    }
 }

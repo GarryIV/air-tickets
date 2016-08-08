@@ -47,4 +47,19 @@ public interface ReservationService {
     @RequestMapping(method = RequestMethod.DELETE, value = "/api/reservation/user/{userId}/{reservationId}")
     void cancelUserReservation(@PathVariable("userId") Long userId,
                                @PathVariable("reservationId")  Long reservationId);
+
+    /**
+     * Find all reservations by flight
+     * @param flightId flight
+     * @return reservations
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/api/reservation/flight/{flightId}")
+    List<ReservationInfo> findByFlight(@PathVariable("flightId") Long flightId);
+
+    /**
+     * Cancel reservation by id
+     * @param reservationId id
+     */
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/reservation//{reservationId}")
+    void cancel(@PathVariable("reservationId")  Long reservationId);
 }

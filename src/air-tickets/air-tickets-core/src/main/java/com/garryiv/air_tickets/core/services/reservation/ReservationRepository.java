@@ -9,6 +9,8 @@ import java.util.stream.Stream;
 public interface ReservationRepository extends CrudRepository<Reservation, Long> {
     Stream<Reservation> findByUserIdOrderByIdDesc(Long userId);
 
+    Stream<Reservation> findByFlightIdOrderByIdDesc(Long flightId);
+
     Reservation findByIdAndUserId(Long id, Long userId);
 
     Stream<Reservation> findByDepartureBetweenAndStatus(Date adjustedFrom, Date to, ReservationStatus paid);

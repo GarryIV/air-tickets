@@ -1,5 +1,6 @@
 package com.garryiv.air_tickets.core.services.reservation;
 
+import com.garryiv.air_tickets.api.flight.FlightInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationRequest;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
@@ -7,9 +8,11 @@ import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
 import com.garryiv.air_tickets.core.services.CoreServiceTest;
 import com.garryiv.air_tickets.core.services.flight.Flight;
+import com.garryiv.air_tickets.core.services.flight.FlightCancelledEvent;
 import com.garryiv.air_tickets.core.services.flight.FlightRepository;
 import com.garryiv.air_tickets.core.services.flight.FlightServiceImplTest;
 import org.apache.commons.lang3.time.DateUtils;
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,6 +115,42 @@ public class ReservationServiceImplTest {
     }
 
     @Test
+    public void handleFlightCancelledEvent() throws Exception {
+        UserInfo userInfo = userService.findOrCreate("test@email");
+        ReservationInfo reservation = createReservation(userInfo);
+
+        FlightInfo flightInfo = new FlightInfo();
+        flightInfo.setId(reservation.getFlightId());
+
+        reservationService.handleFlightCancelledEvent(new FlightCancelledEvent(flightInfo));
+        reservation = reservationService.find(reservation.getId());
+        assertEquals(ReservationStatus.CANCELLED, reservation.getStatus());
+    }
+
+    @Test
+    public void findByFlight() throws Exception {
+        UserInfo userInfo = userService.findOrCreate("test@email");
+        ReservationInfo reservation = createReservation(userInfo);
+        List<Long> ids = reservationService.findByFlight(reservation.getFlightId())
+                .stream()
+                .map(reservationInfo -> reservationInfo.getId())
+                .collect(Collectors.toList());
+
+        assertThat(ids, CoreMatchers.hasItem(reservation.getId()));
+    }
+
+
+    @Test
+    public void cancel() throws Exception {
+        UserInfo userInfo = userService.findOrCreate("test@email");
+        ReservationInfo reservation = createReservation(userInfo);
+
+        reservationService.cancel(reservation.getId());
+        reservation = reservationService.find(reservation.getId());
+        assertEquals(ReservationStatus.CANCELLED, reservation.getStatus());
+    }
+
+    @Test
     public void findReservationsForCheckIn() throws Exception {
         UserInfo userInfo = userService.findOrCreate("test@email");
 
@@ -151,11 +190,6 @@ public class ReservationServiceImplTest {
         flight.setArrival(DateUtils.addHours(departure, 1));
         flightRepository.save(flight);
         return flight;
-    }
-
-    @Test
-    public void handleFlightCancelledEvent() throws Exception {
-
     }
 
     private void checkNewReservation(UserInfo userInfo, ReservationInfo reservation) {
