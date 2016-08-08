@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserInfo findOrCreate(@PathVariable String email) {
+    public UserInfo findOrCreate(@RequestParam String email) {
         Assert.notNull(email, "email");
 
         User user = userRepository.findByEmail(email);

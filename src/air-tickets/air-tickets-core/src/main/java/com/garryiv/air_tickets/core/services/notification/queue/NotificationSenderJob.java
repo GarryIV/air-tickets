@@ -1,6 +1,8 @@
 package com.garryiv.air_tickets.core.services.notification.queue;
 
 import com.garryiv.air_tickets.core.services.notification.email.Email;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Service
 public class NotificationSenderJob {
+    public static final Logger logger = LoggerFactory.getLogger(NotificationSenderJob.class);
 
     private final JavaMailSender mailSender;
 
@@ -28,11 +31,18 @@ public class NotificationSenderJob {
     @Scheduled(fixedDelay = 10000)
     public void sendNotifications() {
         List<Notification> pendingNotifications = notificationService.findPendingNotifications();
+        int pendingSize = pendingNotifications.size();
+        if(pendingSize > 0) {
+            logger.info("{} mails is pending", pendingSize);
+        } else {
+            logger.trace("no pending mail");
+        }
         for (Notification notification : pendingNotifications) {
             try {
                 trySend(notification.getPayload());
                 notificationService.success(notification);
-            } catch (MailSendException e) {
+            } catch (Exception e) {
+                logger.info("can't send email", e);
                 notificationService.failure(notification);
             }
         }
@@ -42,6 +52,7 @@ public class NotificationSenderJob {
         mailSender.send(mimeMessage -> {
             mimeMessage.setRecipient(Message.RecipientType.TO, new InternetAddress(email.getRecipient()));
             mimeMessage.setSubject(email.getSubject());
+            mimeMessage.setContent(email.getSubject(), "text/html; charset=utf-8");
         });
     }
 }

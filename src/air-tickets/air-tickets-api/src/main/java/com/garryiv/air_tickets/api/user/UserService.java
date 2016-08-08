@@ -3,6 +3,7 @@ package com.garryiv.air_tickets.api.user;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * This service is responsible for searching and managing public users.
@@ -14,8 +15,8 @@ public interface UserService {
      * @param email email to search user
      * @return user
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/api/user/email/{email}")
-    UserInfo findOrCreate(@PathVariable("email") String email);
+    @RequestMapping(method = RequestMethod.GET, value = "/api/user/email")
+    UserInfo findOrCreate(@RequestParam("email") String email);
 
     /**
      * Get user by id or throw an exception

@@ -44,6 +44,8 @@ public class NotificationService implements NotificationQueue {
     public Notification success(Notification notification) {
         notification.setStatus(NotificationStatus.SENT);
         notification.setLastAttempt(new Date());
+
+        logger.info("Email is sent {}", notification.getPayload());
         return notificationRepository.save(notification);
     }
 
@@ -53,6 +55,9 @@ public class NotificationService implements NotificationQueue {
             notification.setLastAttempt(new Date());
             notification.setStatus(NotificationStatus.ERROR);
         }
+
+        logger.info("Email is not sent {} {} {}",
+                notification.getPayload(), notification.getFailures(), notification.getStatus());
         return notificationRepository.save(notification);
     }
 }

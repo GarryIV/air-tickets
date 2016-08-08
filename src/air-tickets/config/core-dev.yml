@@ -8,12 +8,6 @@ spring:
     host: smtp.gmail.com
     username:
     password:
-  properties:
-    mail:
-      smtp:
-        auth: true
-        ssl: true
-        socketFactory:
-          port: 25
-          class: javax.net.ssl.SSLSocketFactory
-          fallback: false
+    port: 587
+    properties:
+      mail.smtp.starttls.enable: true
