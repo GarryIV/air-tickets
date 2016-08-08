@@ -13,27 +13,27 @@ angular.module('reservation', []).controller('reservationNew', function($http,  
 
     return controller;
 
-}).controller('reservationView', function($http,  $routeParams, $location) {
-    var controller = {};
-
-    $http.get('/api/my-reservation/' + $routeParams.id).then(function (response) {
-        controller.reservation = response.data;
-    });
-
-    return controller;
 }).controller('reservationMy', function($http) {
     var controller = {};
 
-    $http.get('api/my-reservation').then(function (response) {
-        controller.reservations = response.data;
-    });
+    var refresh = function() {
+        $http.get('api/my-reservation').then(function (response) {
+            controller.reservations = response.data;
+        });
+    };
+
+    refresh();
+
+    controller.canPay = function (reservation) {
+        return reservation.status == 'CREATED';
+    };
 
     controller.pay = function (reservation) {
 
     };
 
     controller.cancel = function (reservation) {
-
+        $http.delete('api/my-reservation/' + reservation.id).then(refresh);
     };
 
     return controller;

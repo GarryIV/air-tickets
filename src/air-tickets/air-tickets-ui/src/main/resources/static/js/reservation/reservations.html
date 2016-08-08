@@ -16,9 +16,14 @@
             </div>
             <div class="panel-body">
                 <button ng-click="controller.pay(flight)"
-                        ng-show="reservation.status == 'CREATED'"
+                        ng-show="controller.canPay(flight)"
                         class="btn btn-primary">
                     Pay
+                </button>
+                <button ng-click="controller.cancel(flight)"
+                        ng-show="reservation.status != 'CANCELLED'"
+                        class="btn">
+                    Cancel
                 </button>
             </div>
         </div>

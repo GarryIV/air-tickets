@@ -23,6 +23,10 @@ angular
 						templateUrl : 'js/reservation/reservations.html',
 						controller : 'reservationMy',
 						controllerAs : 'controller'
+					}).when('/staff/reservation', {
+						templateUrl : 'js/reservation/reservations.html',
+						controller : 'reservationStaff',
+						controllerAs : 'controller'
 					}).otherwise('/');
 
 					$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
