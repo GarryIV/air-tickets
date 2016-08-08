@@ -11,4 +11,7 @@ public interface FlightService {
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/flight/{flightId}")
     FlightInfo find(@PathVariable("flightId") Long flightId);
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/api/flight/{flightId}")
+    void cancel(@PathVariable("flightId") Long flightId);
 }

@@ -2,7 +2,7 @@ package com.garryiv.air_tickets.core.services.user;
 
 import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
-import com.garryiv.air_tickets.core.services.CoreSpringBootTest;
+import com.garryiv.air_tickets.core.services.CoreServiceTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@CoreSpringBootTest
+@CoreServiceTest
 public class UserServiceImplTest {
     @Autowired
     private UserService userService;

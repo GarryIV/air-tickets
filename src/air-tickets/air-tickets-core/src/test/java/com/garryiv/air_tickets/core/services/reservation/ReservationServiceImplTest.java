@@ -2,24 +2,34 @@ package com.garryiv.air_tickets.core.services.reservation;
 
 import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationRequest;
-import com.garryiv.air_tickets.api.reservation.ReservationService;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
 import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
-import com.garryiv.air_tickets.core.services.CoreSpringBootTest;
+import com.garryiv.air_tickets.core.services.CoreServiceTest;
+import com.garryiv.air_tickets.core.services.flight.Flight;
+import com.garryiv.air_tickets.core.services.flight.FlightRepository;
+import com.garryiv.air_tickets.core.services.flight.FlightServiceImplTest;
+import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static com.garryiv.air_tickets.core.services.reservation.ReservationServiceImpl.DEFAULT_EARLIEST_CHECK_IN;
+import static com.garryiv.air_tickets.core.services.reservation.ReservationServiceImpl.DEFAULT_LATEST_CHECK_IN;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@CoreSpringBootTest
+@CoreServiceTest
 public class ReservationServiceImplTest {
 
     // The first flight in data.sql
@@ -31,6 +41,12 @@ public class ReservationServiceImplTest {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FlightRepository flightRepository;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @Test
     public void create() throws Exception {
@@ -92,6 +108,54 @@ public class ReservationServiceImplTest {
         reservationService.cancelUserReservation(userInfo.getId(), reservation.getId());
     }
 
+    @Test
+    public void findReservationsForCheckIn() throws Exception {
+        UserInfo userInfo = userService.findOrCreate("test@email");
+
+        // departure in 47 hours
+        Date departure1 = DateUtils.addHours(new Date(), DEFAULT_EARLIEST_CHECK_IN - 1);
+
+        // departure in 49 hours
+        Date departure2 = DateUtils.addHours(new Date(), DEFAULT_EARLIEST_CHECK_IN + 1);
+
+        Flight flight1 = createFlight(departure1);
+        Flight flight2 = createFlight(departure2);
+
+        ReservationInfo reservation1 = createReservation(userInfo, flight1.getId());
+        setStatus(reservation1, ReservationStatus.PAID);
+        ReservationInfo reservation2 = createReservation(userInfo, flight2.getId());
+        setStatus(reservation2, ReservationStatus.PAID);
+
+        Date from = DateUtils.addHours(new Date(), DEFAULT_LATEST_CHECK_IN + 1);
+        Date to = DateUtils.addHours(new Date(), DEFAULT_EARLIEST_CHECK_IN);
+        Set<Long> foundIds = reservationService.findReservationsForCheckIn(from, to)
+                .stream()
+                .map(ReservationInfo::getId)
+                .collect(Collectors.toSet());
+
+        assertThat(foundIds, hasItem(reservation1.getId()));
+        assertThat(foundIds, not(hasItem(reservation2.getId())));
+    }
+
+    private void setStatus(ReservationInfo info, ReservationStatus status) {
+        Reservation reservation = reservationRepository.findOne(info.getId());
+        reservation.setStatus(status);
+        reservationRepository.save(reservation);
+    }
+
+    private Flight createFlight(Date departure) {
+        Flight flight = FlightServiceImplTest.newTestFlight();
+        flight.setDeparture(departure);
+        flight.setArrival(DateUtils.addHours(departure, 1));
+        flightRepository.save(flight);
+        return flight;
+    }
+
+    @Test
+    public void handleFlightCancelledEvent() throws Exception {
+
+    }
+
     private void checkNewReservation(UserInfo userInfo, ReservationInfo reservation) {
         assertNotNull(reservation);
         assertNotNull(reservation.getId());
@@ -102,8 +166,12 @@ public class ReservationServiceImplTest {
     }
 
     private ReservationInfo createReservation(UserInfo userInfo) {
+        return createReservation(userInfo, TEST_FLIGHT_ID);
+    }
+
+    private ReservationInfo createReservation(UserInfo userInfo, Long flightId) {
         ReservationRequest request = new ReservationRequest();
-        request.setFlightId(TEST_FLIGHT_ID);
+        request.setFlightId(flightId);
         request.setUserId(userInfo.getId());
 
         return reservationService.create(request);

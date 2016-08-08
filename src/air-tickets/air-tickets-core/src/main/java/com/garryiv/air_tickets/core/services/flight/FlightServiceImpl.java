@@ -5,6 +5,7 @@ import com.garryiv.air_tickets.api.flight.FlightSearch;
 import com.garryiv.air_tickets.api.flight.FlightService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -20,10 +21,12 @@ import java.util.stream.Collectors;
 @Service
 public class FlightServiceImpl implements FlightService {
     private final FlightRepository flightRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Autowired
-    public FlightServiceImpl(FlightRepository flightRepository) {
+    public FlightServiceImpl(FlightRepository flightRepository, ApplicationEventPublisher eventPublisher) {
         this.flightRepository = flightRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -39,6 +42,19 @@ public class FlightServiceImpl implements FlightService {
     public FlightInfo find(@PathVariable Long flightId) {
         Assert.notNull(flightId, "flightId");
         return toFlightInfo(flightRepository.findOne(flightId));
+    }
+
+    @Override
+    public void cancel(@PathVariable Long flightId) {
+        Assert.notNull(flightId, "flightId");
+        Flight flight = flightRepository.findOne(flightId);
+        if(flight.getStatus() == FlightStatus.CANCELLED) {
+            // already cancelled
+            return;
+        }
+        flight.setStatus(FlightStatus.CANCELLED);
+        flightRepository.save(flight);
+        eventPublisher.publishEvent(new FlightCancelledEvent(toFlightInfo(flight)));
     }
 
     private FlightInfo toFlightInfo(Flight flight) {

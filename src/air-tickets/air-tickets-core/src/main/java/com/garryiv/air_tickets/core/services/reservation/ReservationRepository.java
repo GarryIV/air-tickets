@@ -1,6 +1,5 @@
 package com.garryiv.air_tickets.core.services.reservation;
 
-import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
 import org.springframework.data.repository.CrudRepository;
 
@@ -12,5 +11,7 @@ public interface ReservationRepository extends CrudRepository<Reservation, Long>
 
     Reservation findByIdAndUserId(Long id, Long userId);
 
-    Stream<ReservationInfo> findByDepartureBetweenAndStatus(Date adjustedFrom, Date to, ReservationStatus paid);
+    Stream<Reservation> findByDepartureBetweenAndStatus(Date adjustedFrom, Date to, ReservationStatus paid);
+
+    Stream<Reservation> findByFlightIdAndStatusNot(Long flightId, ReservationStatus status);
 }

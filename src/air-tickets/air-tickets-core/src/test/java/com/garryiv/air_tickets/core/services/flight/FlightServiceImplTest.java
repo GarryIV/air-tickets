@@ -3,7 +3,7 @@ package com.garryiv.air_tickets.core.services.flight;
 import com.garryiv.air_tickets.api.flight.FlightInfo;
 import com.garryiv.air_tickets.api.flight.FlightSearch;
 import com.garryiv.air_tickets.api.flight.FlightService;
-import com.garryiv.air_tickets.core.services.CoreSpringBootTest;
+import com.garryiv.air_tickets.core.services.CoreServiceTest;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@CoreSpringBootTest
+@CoreServiceTest
 public class FlightServiceImplTest {
     @Autowired
     private FlightService flightService;
@@ -38,9 +38,13 @@ public class FlightServiceImplTest {
 
         List<FlightInfo> flights = flightService.findAll(search);
         assertNotNull(flights);
-        assertEquals(1, flights.size());
-        FlightInfo first = flights.get(0);
-        checkEquals(testFlight, first);
+        FlightInfo justAdded = flights.stream()
+                .filter(flightInfo -> flightInfo.getId().equals(testFlight.getId()))
+                .findFirst()
+                .orElseGet(() -> null);
+
+        assertNotNull(justAdded);
+        checkEquals(testFlight, justAdded);
     }
 
     @Test
@@ -60,6 +64,17 @@ public class FlightServiceImplTest {
         flightService.find(Long.MAX_VALUE);
     }
 
+
+    @Test
+    public void cancel() throws Exception {
+        Flight testFlight = makeTestFlight();
+
+        flightService.cancel(testFlight.getId());
+
+        Flight cancelled = flightRepository.findOne(testFlight.getId());
+        assertEquals(FlightStatus.CANCELLED, cancelled.getStatus());
+    }
+
     private void checkEquals(Flight expected, FlightInfo actual) {
         assertEquals(expected.getId(), actual.getId());
         assertEquals(expected.getOrigin(), actual.getOrigin());
@@ -71,6 +86,13 @@ public class FlightServiceImplTest {
     }
 
     private Flight makeTestFlight() {
+        Flight exampleFlight = newTestFlight();
+        flightRepository.save(exampleFlight);
+        exampleFlight = flightRepository.findOne(exampleFlight.getId());
+        return exampleFlight;
+    }
+
+    public static Flight newTestFlight() {
         Flight exampleFlight = new Flight();
         exampleFlight.setFlightNumber("YY333");
         exampleFlight.setDeparture(DateUtils.truncate(new Date(), Calendar.MINUTE));
@@ -79,8 +101,6 @@ public class FlightServiceImplTest {
         exampleFlight.setDestination("SDG");
         exampleFlight.setPrice(new BigDecimal(10));
         exampleFlight.setStatus(FlightStatus.SCHEDULED);
-        flightRepository.save(exampleFlight);
-        exampleFlight = flightRepository.findOne(exampleFlight.getId());
         return exampleFlight;
     }
 

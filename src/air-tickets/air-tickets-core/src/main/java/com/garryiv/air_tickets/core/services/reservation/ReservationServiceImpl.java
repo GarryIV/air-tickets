@@ -5,11 +5,13 @@ import com.garryiv.air_tickets.api.flight.FlightService;
 import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationRequest;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
+import com.garryiv.air_tickets.core.services.flight.FlightCancelledEvent;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -17,17 +19,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RestController
 @Transactional
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    private static final int DEFAULT_LATEST_CHECK_IN = 4;
+    static final int DEFAULT_LATEST_CHECK_IN = 4;
+    static final int DEFAULT_EARLIEST_CHECK_IN = 48;
 
     private final ApplicationEventPublisher eventPublisher;
 
@@ -87,6 +90,37 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void cancelUserReservation(@PathVariable Long userId, @PathVariable Long reservationId) {
         Reservation reservation = reservationRepository.findByIdAndUserId(reservationId, userId);
+        doCancel(reservation);
+    }
+
+    @Override
+    @Transactional
+    public List<ReservationInfo> findReservationsForCheckIn(Date from, Date to) {
+        Date checkInThreshold = DateUtils.addHours(new Date(), latestCheckIn);
+        Date adjustedFrom = ObjectUtils.max(from, checkInThreshold);
+        if (adjustedFrom.compareTo(to) > 0) {
+            // too late to notify
+            return Collections.emptyList();
+        }
+
+        return reservationRepository.findByDepartureBetweenAndStatus(adjustedFrom, to, ReservationStatus.PAID)
+                .map(this::toInfo)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @EventListener
+    public void handleFlightCancelledEvent(FlightCancelledEvent event) {
+        FlightInfo flight = event.getFlight();
+        reservationRepository.findByFlightIdAndStatusNot(flight.getId(), ReservationStatus.CANCELLED)
+                .forEach(this::doCancel);
+    }
+
+    private void doCancel(Reservation reservation) {
+        if(reservation.getStatus() == ReservationStatus.CANCELLED) {
+            // already cancelled
+            return;
+        }
         reservation.setStatus(ReservationStatus.CANCELLED);
         reservationRepository.save(reservation);
         eventPublisher.publishEvent(new ReservationCancelledEvent(toInfo(reservation)));
@@ -100,15 +134,4 @@ public class ReservationServiceImpl implements ReservationService {
         return info;
     }
 
-    @Override
-    public Stream<ReservationInfo> findReservationsForCheckIn(Date from, Date to) {
-        Date checkInThreshold = DateUtils.addHours(new Date(), latestCheckIn);
-        Date adjustedFrom = ObjectUtils.max(from, checkInThreshold);
-        if (adjustedFrom.compareTo(to) > 0) {
-            // too late to notify
-            return Stream.empty();
-        }
-
-        return reservationRepository.findByDepartureBetweenAndStatus(adjustedFrom, to, ReservationStatus.PAID);
-    }
 }

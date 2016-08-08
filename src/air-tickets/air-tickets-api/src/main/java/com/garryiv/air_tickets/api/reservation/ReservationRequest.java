@@ -7,6 +7,14 @@ public class ReservationRequest {
     private Long flightId;
     private Long userId;
 
+    public ReservationRequest() {
+    }
+
+    public ReservationRequest(Long flightId, Long userId) {
+        this.flightId = flightId;
+        this.userId = userId;
+    }
+
     public Long getFlightId() {
         return flightId;
     }
