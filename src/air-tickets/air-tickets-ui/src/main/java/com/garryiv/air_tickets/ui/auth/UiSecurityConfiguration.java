@@ -97,10 +97,7 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                     .addFilterAfter(ssoFilter(), BasicAuthenticationFilter.class)
-                            ;
-
-        AccessKeyProcessingFilter filter = new AccessKeyProcessingFilter(authenticationManager());
-        http.addFilterAfter(filter, BasicAuthenticationFilter.class);
+                    .addFilterAfter(accessKeyFilter(), BasicAuthenticationFilter.class);
     }
 
     @Bean
@@ -136,6 +133,11 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
         filter.setTokenServices(tokenServices);
         filter.setAuthenticationDetailsSource(new OAuth2AuthenticationDetailsSource());
         return filter;
+    }
+
+
+    private AccessKeyProcessingFilter accessKeyFilter() throws Exception {
+        return new AccessKeyProcessingFilter(authenticationManager());
     }
 
     public static class ProvidersProperties {
