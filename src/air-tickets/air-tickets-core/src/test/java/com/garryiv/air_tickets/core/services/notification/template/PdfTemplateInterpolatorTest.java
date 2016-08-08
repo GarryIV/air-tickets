@@ -15,7 +15,7 @@ public class PdfTemplateInterpolatorTest {
 
         HashMap<String, Object> contextMap = new HashMap<>();
         contextMap.put("name", "value");
-        byte[] bytes = interpolator.interpolate("classpath:/ODTHelloWordWithVelocity.odt", contextMap);
+        byte[] bytes = interpolator.interpolate("ODTHelloWordWithVelocity.odt", contextMap);
 
         assertNotNull(bytes);
     }

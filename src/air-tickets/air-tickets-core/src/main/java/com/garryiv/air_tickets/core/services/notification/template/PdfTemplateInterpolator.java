@@ -47,7 +47,7 @@ public class PdfTemplateInterpolator implements TemplateInterpolator {
         if (report != null) {
             return report;
         }
-        Resource resource = resourceLoader.getResource(template);
+        Resource resource = resourceLoader.getResource("classpath:/templates/" + template);
 
         if (!resource.exists()) {
             throw new IllegalArgumentException("Template does not exits " + template);
