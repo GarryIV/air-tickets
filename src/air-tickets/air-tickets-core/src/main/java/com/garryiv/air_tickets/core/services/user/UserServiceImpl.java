@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @Transactional
 @Service
@@ -24,6 +26,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    public UserInfo findByAccessKey(@RequestParam String accessKey) {
+        User user = userRepository.findByAccessKey(accessKey);
+        if(user == null) {
+            return null;
+        }
+        return toUserInfo(user);
+    }
+
+    @Override
     public UserInfo findOrCreate(@RequestParam String email) {
         Assert.notNull(email, "email");
 
@@ -31,6 +42,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             user = new User();
             user.setEmail(email);
+            user.setAccessKey(UUID.randomUUID().toString());
             userRepository.save(user);
         }
         return toUserInfo(user);

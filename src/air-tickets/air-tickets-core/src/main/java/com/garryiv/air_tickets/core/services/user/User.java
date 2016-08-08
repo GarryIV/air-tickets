@@ -16,7 +16,7 @@ public class User {
 
     private String email;
 
-    private String name;
+    private String accessKey;
 
     public Long getId() {
         return id;
@@ -34,11 +34,11 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getAccessKey() {
+        return accessKey;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
     }
 }

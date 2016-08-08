@@ -1,18 +1,14 @@
-package com.garryiv.air_tickets.core.services.job;
+package com.garryiv.air_tickets.core.services.reservation;
 
 import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
 import com.garryiv.air_tickets.core.services.notification.email.EmailBuilderFactory;
-import com.garryiv.air_tickets.core.services.reservation.ReservationService;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
-public class CheckInNotificationJob implements Job {
+public class CheckInNotificationJob {
 
     private final EmailBuilderFactory emailBuilderFactory;
 
@@ -30,12 +26,9 @@ public class CheckInNotificationJob implements Job {
         this.reservationService = reservationService;
     }
 
-    @Override
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        Date from = context.getPreviousFireTime();
-        reservationService.findReservationsForCheckIn(from)
+    public void execute() {
+        reservationService.findReservationsForCheckIn(new Date())
                 .forEach(this::enqueueNotification);
-
     }
 
     private void enqueueNotification(ReservationInfo reservation) {

@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UserService {
 
     /**
+     * Looks for a user in the repository. Returns existing or throw exception.
+     * @param accessKey email to search user
+     * @return user
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/api/user/accesskey")
+    UserInfo findByAccessKey(String accessKey);
+
+    /**
      * Looks for a user in the repository. Returns existing or new user.
      * @param email email to search user
      * @return user

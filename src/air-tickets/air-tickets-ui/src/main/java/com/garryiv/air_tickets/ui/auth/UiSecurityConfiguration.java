@@ -1,5 +1,8 @@
 package com.garryiv.air_tickets.ui.auth;
 
+import com.garryiv.air_tickets.api.user.UserService;
+import com.garryiv.air_tickets.ui.auth.token.AccessKeyAuthenticationProvider;
+import com.garryiv.air_tickets.ui.auth.token.AccessKeyProcessingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
@@ -12,6 +15,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
@@ -52,12 +56,25 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2ClientContext oauth2ClientContext;
 
+    @Autowired
+    private AccessKeyAuthenticationProvider accessKeyAuthenticationProvider;
+
     @Bean
     public FilterRegistrationBean oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(filter);
         registration.setOrder(-100);
         return registration;
+    }
+
+    @Bean
+    public AccessKeyAuthenticationProvider accessKeyAuthenticationProvider(UserService userService) {
+        return new AccessKeyAuthenticationProvider(userService);
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(accessKeyAuthenticationProvider);
     }
 
     @Override
@@ -80,6 +97,9 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
                     .addFilterAfter(ssoFilter(), BasicAuthenticationFilter.class);
+
+        AccessKeyProcessingFilter filter = new AccessKeyProcessingFilter(authenticationManager());
+        http.addFilterAfter(filter, BasicAuthenticationFilter.class);
     }
 
     @Bean
