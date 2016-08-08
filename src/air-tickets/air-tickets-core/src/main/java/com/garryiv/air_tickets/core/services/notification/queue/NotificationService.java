@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 public class NotificationService implements NotificationQueue {
 
@@ -23,7 +25,7 @@ public class NotificationService implements NotificationQueue {
         Notification notification = new Notification();
         notification.setStatus(NotificationStatus.PENDING);
         notification.setPayload(email);
-        //notificationRepository.save(notification);
+        notificationRepository.save(notification);
         logger.info("Email is enqueued: " + email);
         return notification.getId();
     }
