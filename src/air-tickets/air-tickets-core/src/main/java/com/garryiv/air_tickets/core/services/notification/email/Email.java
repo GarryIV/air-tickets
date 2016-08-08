@@ -1,8 +1,11 @@
 package com.garryiv.air_tickets.core.services.notification.email;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.List;
 
+@ToString(exclude = "body")
 public class Email implements Serializable {
     public static final int serialVersionUID = 1;
 

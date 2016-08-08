@@ -1,7 +1,10 @@
 package com.garryiv.air_tickets.core.services.notification.email;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 
+@ToString(exclude = "content")
 public class EmailAttachment implements Serializable {
     public static final int serialVersionUID = 1;
 

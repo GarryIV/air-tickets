@@ -29,6 +29,7 @@ public class UserNotificationService {
         UserInfo user = userService.find(reservation.getUserId());
 
         emailBuilderFactory.newEmail("reservation-cancelled")
+                .withSubject("Your reservation is cancelled")
                 .withRecipient(user.getEmail())
                 .withContext("reservation", reservation)
                 .withContext("user", user)
