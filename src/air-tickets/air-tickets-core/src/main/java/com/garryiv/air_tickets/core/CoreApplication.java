@@ -3,11 +3,13 @@ package com.garryiv.air_tickets.core;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories
+@EnableScheduling
 public class CoreApplication  {
 
     public static void main(String[] args) {

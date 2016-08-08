@@ -3,3 +3,17 @@ spring:
     url: jdbc:h2:tcp://localhost/C:/Users/Default.NADYA-PC/air-tickets
     username: sa
     password:
+
+  mail:
+    host: smtp.gmail.com
+    username:
+    password:
+  properties:
+    mail:
+      smtp:
+        auth: true
+        ssl: true
+        socketFactory:
+          port: 25
+          class: javax.net.ssl.SSLSocketFactory
+          fallback: false
