@@ -13,12 +13,9 @@ angular.module('auth', []).factory('auth', function($http, $httpParamSerializer,
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 data: $httpParamSerializer(auth.credentials)
             }).then(function (response) {
-                if (response.data.redirect_uri) {
-                    $window.location = response.data.redirect_uri;
-                }
                 auth.error = false;
                 auth.authenticated = true;
-                auth.credentials.password = null;
+                auth.credentials = response.data;
             }, function () {
                 auth.error = true;
                 auth.authenticated = false;
@@ -33,14 +30,34 @@ angular.module('auth', []).factory('auth', function($http, $httpParamSerializer,
             $http.post('logout', {}).finally(function() {
                 auth.authenticated = false;
             });
+        },
+
+        hasRole: function(role) {
+            if (!auth.authenticated) {
+                return false;
+            }
+
+            try {
+                return auth.credentials.authorities.indexOf(role) >= 0;
+            } catch (e) {
+                return false;
+            }
+        },
+
+        isStaff: function () {
+            return auth.hasRole('ROLE_ADMIN')
+        },
+
+        isPublic: function () {
+            return auth.hasRole('ROLE_PUBLIC')
         }
     };
 
     // check current authentication by getting user details
     var checkAuthentication = function() {
         $http.get('/user').then(function(response) {
-            if (response.data.name) {
-                auth.credentials.username = response.data.name;
+            if (response.data.username) {
+                auth.credentials = response.data;
                 auth.authenticated = true;
             } else {
                 auth.authenticated = false;

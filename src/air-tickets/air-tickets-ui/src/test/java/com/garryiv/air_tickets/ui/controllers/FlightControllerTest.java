@@ -16,7 +16,7 @@ public class FlightControllerTest {
     public void findAll() throws Exception {
         // Very basic test using Mockito, need to think about more complex use cases
         FlightService flightService = mock(FlightService.class);
-        when(flightService.findAll(any(FlightSearch.class))).thenReturn(new ArrayList<>());
+        when(flightService.searchScheduled(any(FlightSearch.class))).thenReturn(new ArrayList<>());
         FlightController controller = new FlightController(flightService);
         assertNotNull(controller.findAll(new FlightSearch()));
     }

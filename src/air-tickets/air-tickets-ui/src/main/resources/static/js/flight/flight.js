@@ -32,7 +32,7 @@ angular.module('flight', []).controller('flight', function($http) {
     };
 
     controller.cancelFlight = function (flight) {
-        console.log("Cancel the flight " + flight);
+        $http.delete('/api/flight/' + flight.id).then(controller.search);
     };
 
     return controller;

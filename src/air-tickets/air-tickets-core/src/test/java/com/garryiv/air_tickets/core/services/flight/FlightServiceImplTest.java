@@ -36,7 +36,7 @@ public class FlightServiceImplTest {
         search.setDepartureFrom(DateUtils.addDays(testFlight.getDeparture(), -1));
         search.setDepartureTo(DateUtils.addDays(testFlight.getDeparture(), 1));
 
-        List<FlightInfo> flights = flightService.findAll(search);
+        List<FlightInfo> flights = flightService.searchScheduled(search);
         assertNotNull(flights);
         FlightInfo justAdded = flights.stream()
                 .filter(flightInfo -> flightInfo.getId().equals(testFlight.getId()))

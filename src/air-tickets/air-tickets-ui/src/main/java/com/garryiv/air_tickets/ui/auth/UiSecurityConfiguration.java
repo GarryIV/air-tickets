@@ -27,6 +27,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetailsSource;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.filter.CompositeFilter;
@@ -66,7 +67,7 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
                     .loginPage("/")
                     .loginProcessingUrl("/login/staff")
                     .failureHandler(new SendErrorFailureHandler(HttpServletResponse.SC_FORBIDDEN))
-                    .successForwardUrl("/login/staff/success")
+                    .successHandler(new SimpleUrlAuthenticationSuccessHandler("/user"))
                 .and()
                     .antMatcher("/**").authorizeRequests()
                     .antMatchers("/", "/login**", "/flight", "/api/**", "/webjars/**").permitAll()

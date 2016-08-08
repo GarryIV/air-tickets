@@ -11,8 +11,8 @@ public interface FlightService {
      * @param search search parameters
      * @return flights
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/api/flight")
-    List<FlightInfo> findAll(@RequestBody FlightSearch search);
+    @RequestMapping(method = RequestMethod.POST, value = "/api/flight/scheduled")
+    List<FlightInfo> searchScheduled(@RequestBody FlightSearch search);
 
     /**
      * Find a flight by flight id or throw exception in case no flight with given id

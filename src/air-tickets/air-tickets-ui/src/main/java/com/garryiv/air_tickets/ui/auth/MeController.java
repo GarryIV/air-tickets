@@ -15,7 +15,7 @@ public class MeController {
     @RequestMapping({ "/user", "/me" })
     public Map<String, Object> user(Principal principal) {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("name", principal.getName());
+        map.put("username", principal.getName());
         map.put("authorities", getAuthorities(principal));
         return map;
     }

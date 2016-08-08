@@ -23,7 +23,7 @@ public class FlightController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/search")
     public List<FlightInfo> findAll(@RequestBody FlightSearch search) {
-        return flightService.findAll(search);
+        return flightService.searchScheduled(search);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{flightId}")
@@ -32,7 +32,7 @@ public class FlightController {
     }
 
     @RolesAllowed(Roles.STAFF)
-    @RequestMapping(method = RequestMethod.DELETE, value = "/api/flight/{flightId}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{flightId}")
     public void cancel(@PathVariable("flightId") Long flightId) {
         flightService.cancel(flightId);
     }

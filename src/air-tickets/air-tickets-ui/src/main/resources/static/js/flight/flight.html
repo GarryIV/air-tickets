@@ -26,8 +26,13 @@
                 Departure {{flight.departure | date:'short'}} -> Arrival {{flight.arrival | date:'short'}}
             </div>
             <div class="panel-body">
-                <a href="/user/reservation/create/{{flight.id}}"  class="btn btn-primary" role="button">Reserve a ticket</a>
-                <button ng-click="controller.cancelFlight(flight)" class="btn">Cancel the flight</button>
+                <a href="/user/reservation/create/{{flight.id}}"  class="btn btn-primary" role="button"
+                   ng-show="auth.isPublic()">
+                    Reserve a ticket
+                </a>
+                <button ng-click="controller.cancelFlight(flight)" ng-show="auth.isStaff()" class="btn">
+                    Cancel the flight
+                </button>
             </div>
         </div>
     </div>

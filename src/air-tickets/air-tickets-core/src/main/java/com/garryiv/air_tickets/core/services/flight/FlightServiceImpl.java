@@ -30,10 +30,10 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
-    public List<FlightInfo> findAll(@RequestBody FlightSearch search) {
+    public List<FlightInfo> searchScheduled(@RequestBody FlightSearch search) {
         Assert.notNull(search, "search");
 
-        return flightRepository.findAll(FlightSpecs.from(search))
+        return flightRepository.findAll(FlightSpecs.searchScheduled(search))
                 .map(flight -> toFlightInfo(flight))
                 .collect(Collectors.toList());
     }

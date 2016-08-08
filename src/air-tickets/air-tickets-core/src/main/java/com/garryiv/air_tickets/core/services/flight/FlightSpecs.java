@@ -34,7 +34,7 @@ public class FlightSpecs {
     }
 
     /**
-     * Filter flight from the same day
+     * Filter flight from the range
      * @param from departure after specified date
      * @param to departure before specified date
      * @return spec
@@ -47,14 +47,27 @@ public class FlightSpecs {
     }
 
     /**
+     * Find flights with specified status
+     * @param status status to find
+     * @return spec
+     */
+     public static Specification<Flight> statusEquals(FlightStatus status) {
+        return (root, query, cb) -> cb.and(
+                cb.equal(root.get("status"), status)
+        );
+    }
+
+
+    /**
      * Filter by origin, destination and departure day
      * @param search search parameters
      * @return spec
      */
-    public static Specification<Flight> from(FlightSearch search) {
+    public static Specification<Flight> searchScheduled(FlightSearch search) {
         return where(originEquals(search.getOrigin()))
                 .and(destinationEquals(search.getDestination()))
-                .and(departureBetween(search.getDepartureFrom(), search.getDepartureTo()));
+                .and(departureBetween(search.getDepartureFrom(), search.getDepartureTo()))
+                .and(statusEquals(FlightStatus.SCHEDULED));
     }
 
     private static Predicate equalIgnoreCase(CriteriaBuilder cb, Expression<String> x, String y) {
