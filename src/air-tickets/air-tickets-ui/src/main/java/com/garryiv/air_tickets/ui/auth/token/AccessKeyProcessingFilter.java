@@ -29,20 +29,20 @@ public class AccessKeyProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        String token = request.getParameter(ACCESS_TOKEN);
+        if(StringUtils.isNotEmpty(token)) {
+            Authentication currentUser = SecurityContextHolder.getContext()
+                    .getAuthentication();
 
-        if (requiresAuthentication(request)) {
-            String token = request.getParameter(ACCESS_TOKEN);
-            if(StringUtils.isNotEmpty(token)) {
-                authenticationManager.authenticate(new AccessKeyToken(token));
+            if (currentUser == null) {
+                Authentication authentication = authenticationManager.authenticate(new AccessKeyToken(token));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+            // strip query string
+            response.sendRedirect(request.getRequestURL().toString());
+            return;
         }
         filterChain.doFilter(request, response);
     }
 
-    private boolean requiresAuthentication(HttpServletRequest request) {
-        Authentication currentUser = SecurityContextHolder.getContext()
-                .getAuthentication();
-
-        return currentUser == null;
-    }
 }

@@ -15,8 +15,8 @@ public interface UserService {
      * @param accessKey email to search user
      * @return user
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/api/user/accesskey")
-    UserInfo findByAccessKey(String accessKey);
+    @RequestMapping(method = RequestMethod.GET, value = "/api/user/accesskey/{accessKey}")
+    UserInfo findByAccessKey(@PathVariable("accessKey") String accessKey);
 
     /**
      * Looks for a user in the repository. Returns existing or new user.

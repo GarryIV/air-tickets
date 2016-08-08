@@ -96,7 +96,8 @@ public class UiSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                     .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and()
-                    .addFilterAfter(ssoFilter(), BasicAuthenticationFilter.class);
+                    .addFilterAfter(ssoFilter(), BasicAuthenticationFilter.class)
+                            ;
 
         AccessKeyProcessingFilter filter = new AccessKeyProcessingFilter(authenticationManager());
         http.addFilterAfter(filter, BasicAuthenticationFilter.class);

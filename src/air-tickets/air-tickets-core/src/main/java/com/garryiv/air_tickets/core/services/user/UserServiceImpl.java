@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public UserInfo findByAccessKey(@RequestParam String accessKey) {
+    public UserInfo findByAccessKey(@PathVariable String accessKey) {
         User user = userRepository.findByAccessKey(accessKey);
         if(user == null) {
             return null;
