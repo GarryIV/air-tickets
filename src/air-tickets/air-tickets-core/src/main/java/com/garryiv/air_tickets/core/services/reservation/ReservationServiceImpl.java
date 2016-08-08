@@ -91,14 +91,15 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ReservationInfo> findByFlight(Long flightId) {
+    public List<ReservationInfo> findByFlight(@PathVariable Long flightId) {
+        Assert.notNull(flightId, "flightId");
         return reservationRepository.findByFlightIdOrderByIdDesc(flightId)
             .map(this::toInfo)
             .collect(Collectors.toList());
     }
 
     @Override
-    public void cancel(Long reservationId) {
+    public void cancel(@PathVariable Long reservationId) {
         Assert.notNull(reservationId, "reservationId");
         doCancel(reservationRepository.findOne(reservationId));
     }

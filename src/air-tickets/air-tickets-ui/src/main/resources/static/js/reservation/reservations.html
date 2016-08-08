@@ -15,12 +15,12 @@
                 Status {{reservation.status}}
             </div>
             <div class="panel-body">
-                <button ng-click="controller.pay(flight)"
-                        ng-show="controller.canPay(flight)"
+                <button ng-click="controller.pay(reservation)"
+                        ng-show="controller.canPay(reservation)"
                         class="btn btn-primary">
                     Pay
                 </button>
-                <button ng-click="controller.cancel(flight)"
+                <button ng-click="controller.cancel(reservation)"
                         ng-show="reservation.status != 'CANCELLED'"
                         class="btn">
                     Cancel
