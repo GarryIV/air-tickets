@@ -5,7 +5,6 @@ import com.garryiv.air_tickets.core.services.notification.email.EmailBuilderServ
 import com.garryiv.air_tickets.core.services.notification.queue.NotificationQueue;
 import com.garryiv.air_tickets.core.services.notification.template.HtmlTemplateInterpolator;
 import com.garryiv.air_tickets.core.services.notification.template.PdfTemplateInterpolator;
-import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,17 +16,15 @@ import org.springframework.core.io.ResourceLoader;
 public class NotificationConfiguration {
 
     private final ResourceLoader resourceLoader;
-    private final VelocityEngine velocityEngine;
 
     @Autowired
-    public NotificationConfiguration(ResourceLoader resourceLoader, VelocityEngine velocityEngine) {
+    public NotificationConfiguration(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
-        this.velocityEngine = velocityEngine;
     }
 
     @Bean
     public HtmlTemplateInterpolator htmlTemplateInterpolator() {
-        return new HtmlTemplateInterpolator(this.velocityEngine);
+        return new HtmlTemplateInterpolator();
     }
 
     @Bean

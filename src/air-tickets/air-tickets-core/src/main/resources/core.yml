@@ -9,4 +9,4 @@ spring:
 email:
   templates:
     reservation-cancelled:
-      location: classpath://tamplates/reservation-cancelled.ftl
+      location: reservation-cancelled.xhtml
