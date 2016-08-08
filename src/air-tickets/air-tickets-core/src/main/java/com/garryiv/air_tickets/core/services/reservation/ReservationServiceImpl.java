@@ -4,8 +4,9 @@ import com.garryiv.air_tickets.api.flight.FlightInfo;
 import com.garryiv.air_tickets.api.flight.FlightService;
 import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import com.garryiv.air_tickets.api.reservation.ReservationRequest;
-import com.garryiv.air_tickets.api.reservation.ReservationService;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -16,19 +17,25 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @Transactional
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
+    private static final int DEFAULT_LATEST_CHECK_IN = 4;
+
     private final ApplicationEventPublisher eventPublisher;
 
     private final ReservationRepository reservationRepository;
 
     private final FlightService flightService;
+
+    private int latestCheckIn = DEFAULT_LATEST_CHECK_IN;
 
     @Autowired
     public ReservationServiceImpl(ApplicationEventPublisher eventPublisher,
@@ -91,5 +98,17 @@ public class ReservationServiceImpl implements ReservationService {
         ReservationInfo info = new ReservationInfo();
         BeanUtils.copyProperties(reservation, info);
         return info;
+    }
+
+    @Override
+    public Stream<ReservationInfo> findReservationsForCheckIn(Date from, Date to) {
+        Date checkInThreshold = DateUtils.addHours(new Date(), latestCheckIn);
+        Date adjustedFrom = ObjectUtils.max(from, checkInThreshold);
+        if (adjustedFrom.compareTo(to) > 0) {
+            // too late to notify
+            return Stream.empty();
+        }
+
+        return reservationRepository.findByDepartureBetweenAndStatus(adjustedFrom, to, ReservationStatus.PAID);
     }
 }

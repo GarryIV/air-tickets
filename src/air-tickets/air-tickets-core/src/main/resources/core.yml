@@ -5,3 +5,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+email:
+  templates:
+    reservation-cancelled:
+      location: classpath://tamplates/reservation-cancelled.ftl

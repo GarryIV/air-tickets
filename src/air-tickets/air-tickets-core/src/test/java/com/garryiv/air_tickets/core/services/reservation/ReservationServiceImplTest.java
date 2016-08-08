@@ -6,10 +6,10 @@ import com.garryiv.air_tickets.api.reservation.ReservationService;
 import com.garryiv.air_tickets.api.reservation.ReservationStatus;
 import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
+import com.garryiv.air_tickets.core.services.CoreSpringBootTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -19,7 +19,7 @@ import java.util.UUID;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@CoreSpringBootTest
 public class ReservationServiceImplTest {
 
     // The first flight in data.sql

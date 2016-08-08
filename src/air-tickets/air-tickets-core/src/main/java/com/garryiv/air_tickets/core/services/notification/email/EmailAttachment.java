@@ -1,6 +1,10 @@
-package com.garryiv.air_tickets.core.services.notification;
+package com.garryiv.air_tickets.core.services.notification.email;
 
-public class EmailAttachment {
+import java.io.Serializable;
+
+public class EmailAttachment implements Serializable {
+    public static final int serialVersionUID = 1;
+
     private final String name;
     private final byte[] content;
 

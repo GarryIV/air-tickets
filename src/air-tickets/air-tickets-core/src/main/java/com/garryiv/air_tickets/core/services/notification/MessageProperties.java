@@ -14,15 +14,15 @@ public class MessageProperties {
     }
 
     public static class EmailTemplate {
-        private String template;
+        private String location;
         private Map<String, String> attachments = new HashMap<>();
 
-        public String getTemplate() {
-            return template;
+        public String getLocation() {
+            return location;
         }
 
-        public void setTemplate(String template) {
-            this.template = template;
+        public void setLocation(String location) {
+            this.location = location;
         }
 
         public Map<String, String> getAttachments() {

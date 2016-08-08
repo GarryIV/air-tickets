@@ -3,11 +3,11 @@ package com.garryiv.air_tickets.core.services.flight;
 import com.garryiv.air_tickets.api.flight.FlightInfo;
 import com.garryiv.air_tickets.api.flight.FlightSearch;
 import com.garryiv.air_tickets.api.flight.FlightService;
+import com.garryiv.air_tickets.core.services.CoreSpringBootTest;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
@@ -18,7 +18,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@CoreSpringBootTest
 public class FlightServiceImplTest {
     @Autowired
     private FlightService flightService;
