@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PagesController {
 
-    @RequestMapping("/flight")
+    @RequestMapping({"/flight", "/flight/**"})
     public Object flight() {
         return new ModelAndView("/index.html");
     }

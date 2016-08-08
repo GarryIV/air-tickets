@@ -23,7 +23,7 @@ angular
 						templateUrl : 'js/reservation/reservations.html',
 						controller : 'reservationMy',
 						controllerAs : 'controller'
-					}).when('/staff/reservation', {
+					}).when('/flight/reservation/:flightId', {
 						templateUrl : 'js/reservation/reservations.html',
 						controller : 'reservationStaff',
 						controllerAs : 'controller'

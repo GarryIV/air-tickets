@@ -30,6 +30,10 @@
                    ng-show="auth.isPublic()">
                     Reserve a ticket
                 </a>
+                <a href="/flight/reservation/{{flight.id}}"  class="btn btn-primary" role="button"
+                   ng-show="auth.isStaff()">
+                    View reservations
+                </a>
                 <button ng-click="controller.cancelFlight(flight)" ng-show="auth.isStaff()" class="btn">
                     Cancel the flight
                 </button>
