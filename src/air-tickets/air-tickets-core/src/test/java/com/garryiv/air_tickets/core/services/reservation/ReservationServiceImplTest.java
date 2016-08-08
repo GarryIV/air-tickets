@@ -22,8 +22,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.garryiv.air_tickets.core.services.reservation.ReservationServiceImpl.DEFAULT_EARLIEST_CHECK_IN;
-import static com.garryiv.air_tickets.core.services.reservation.ReservationServiceImpl.DEFAULT_LATEST_CHECK_IN;
+import static com.garryiv.air_tickets.core.services.reservation.ReservationServiceImpl.EARLIEST_CHECK_IN;
+import static com.garryiv.air_tickets.core.services.reservation.ReservationServiceImpl.LATEST_CHECK_IN;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.*;
@@ -106,6 +106,9 @@ public class ReservationServiceImplTest {
         UserInfo userInfo = userService.findOrCreate("test@email");
         ReservationInfo reservation = createReservation(userInfo);
         reservationService.cancelUserReservation(userInfo.getId(), reservation.getId());
+
+        // subsequent call does nothing
+        reservationService.cancelUserReservation(userInfo.getId(), reservation.getId());
     }
 
     @Test
@@ -113,10 +116,10 @@ public class ReservationServiceImplTest {
         UserInfo userInfo = userService.findOrCreate("test@email");
 
         // departure in 47 hours
-        Date departure1 = DateUtils.addHours(new Date(), DEFAULT_EARLIEST_CHECK_IN - 1);
+        Date departure1 = DateUtils.addHours(new Date(), EARLIEST_CHECK_IN - 1);
 
         // departure in 49 hours
-        Date departure2 = DateUtils.addHours(new Date(), DEFAULT_EARLIEST_CHECK_IN + 1);
+        Date departure2 = DateUtils.addHours(new Date(), EARLIEST_CHECK_IN + 1);
 
         Flight flight1 = createFlight(departure1);
         Flight flight2 = createFlight(departure2);
@@ -126,9 +129,8 @@ public class ReservationServiceImplTest {
         ReservationInfo reservation2 = createReservation(userInfo, flight2.getId());
         setStatus(reservation2, ReservationStatus.PAID);
 
-        Date from = DateUtils.addHours(new Date(), DEFAULT_LATEST_CHECK_IN + 1);
-        Date to = DateUtils.addHours(new Date(), DEFAULT_EARLIEST_CHECK_IN);
-        Set<Long> foundIds = reservationService.findReservationsForCheckIn(from, to)
+        Date from = DateUtils.addHours(new Date(), LATEST_CHECK_IN + 1);
+        Set<Long> foundIds = reservationService.findReservationsForCheckIn(from)
                 .stream()
                 .map(ReservationInfo::getId)
                 .collect(Collectors.toSet());

@@ -33,9 +33,7 @@ public class CheckInNotificationJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         Date from = context.getPreviousFireTime();
-        Date to = context.getFireTime();
-
-        reservationService.findReservationsForCheckIn(from, to)
+        reservationService.findReservationsForCheckIn(from)
                 .forEach(this::enqueueNotification);
 
     }

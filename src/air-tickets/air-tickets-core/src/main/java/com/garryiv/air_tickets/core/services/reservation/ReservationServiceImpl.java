@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,16 +28,14 @@ import java.util.stream.Collectors;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
-    static final int DEFAULT_LATEST_CHECK_IN = 4;
-    static final int DEFAULT_EARLIEST_CHECK_IN = 48;
+    static final int LATEST_CHECK_IN = 4;
+    static final int EARLIEST_CHECK_IN = 48;
 
     private final ApplicationEventPublisher eventPublisher;
 
     private final ReservationRepository reservationRepository;
 
     private final FlightService flightService;
-
-    private int latestCheckIn = DEFAULT_LATEST_CHECK_IN;
 
     @Autowired
     public ReservationServiceImpl(ApplicationEventPublisher eventPublisher,
@@ -95,14 +92,10 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public List<ReservationInfo> findReservationsForCheckIn(Date from, Date to) {
-        Date checkInThreshold = DateUtils.addHours(new Date(), latestCheckIn);
-        Date adjustedFrom = ObjectUtils.max(from, checkInThreshold);
-        if (adjustedFrom.compareTo(to) > 0) {
-            // too late to notify
-            return Collections.emptyList();
-        }
-
+    public List<ReservationInfo> findReservationsForCheckIn(Date from) {
+        Date latestCheckIn = DateUtils.addHours(new Date(), LATEST_CHECK_IN);
+        Date adjustedFrom = ObjectUtils.max(from, latestCheckIn);
+        Date to = DateUtils.addHours(new Date(), EARLIEST_CHECK_IN);
         return reservationRepository.findByDepartureBetweenAndStatus(adjustedFrom, to, ReservationStatus.PAID)
                 .map(this::toInfo)
                 .collect(Collectors.toList());

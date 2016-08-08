@@ -12,11 +12,10 @@ public interface ReservationService extends com.garryiv.air_tickets.api.reservat
 
     /**
      * Find reservations ready to check-in
-     * @param from flight departure from
-     * @param to flight departure to
+     * @param from departure starting from
      * @return list of matching reservations
      */
-    List<ReservationInfo> findReservationsForCheckIn(Date from, Date to);
+    List<ReservationInfo> findReservationsForCheckIn(Date from);
 
     /**
      * Handles FlightCancelledEvent by cancelling all pending flight reservations
