@@ -9,7 +9,6 @@
 	<modules>
 		<module>air-tickets-core</module>
 		<module>air-tickets-ui</module>
-		<module>air-tickets-launcher</module>
         <module>air-tickets-api</module>
     </modules>
 
