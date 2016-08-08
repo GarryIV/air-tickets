@@ -16,4 +16,12 @@ public interface UserService {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/user/email/{email}")
     UserInfo findOrCreate(@PathVariable("email") String email);
+
+    /**
+     * Get user by id or throw an exception
+     * @param userId user id to get
+     * @return user
+     */
+    @RequestMapping(method = RequestMethod.GET, value = "/api/user/{userId}")
+    UserInfo find(@PathVariable("userId") Long userId);
 }

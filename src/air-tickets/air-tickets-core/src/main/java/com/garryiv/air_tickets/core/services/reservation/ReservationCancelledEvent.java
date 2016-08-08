@@ -4,7 +4,15 @@ import com.garryiv.air_tickets.api.reservation.ReservationInfo;
 import org.springframework.context.ApplicationEvent;
 
 public class ReservationCancelledEvent extends ApplicationEvent {
-    public ReservationCancelledEvent(ReservationInfo reservationInfo) {
-        super(reservationInfo);
+
+    private final ReservationInfo reservation;
+
+    public ReservationCancelledEvent(ReservationInfo reservation) {
+        super(reservation);
+        this.reservation = reservation;
+    }
+
+    public ReservationInfo getReservation() {
+        return reservation;
     }
 }

@@ -17,7 +17,7 @@ public class UserNotificationServiceTest {
     public void test() throws Exception {
         // 1) Load ODT file and set Velocity template engine and cache it to the registry
         InputStream in= new FileInputStream(new File(TEMPLATE));
-        IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
+        IXDocReport report = new XDocReportRegistry().loadReport(in, TemplateEngineKind.Velocity, true);
 
 // 2) Create Java model context
         IContext context = report.createContext();
@@ -31,6 +31,10 @@ public class UserNotificationServiceTest {
 // 3) Generate report by merging Java model with the ODT and convert it to PDF
         OutputStream out = new FileOutputStream(new File("ODTHelloWordWithVelocity_Out.pdf"));
         report.convert(context, options, out);
+
+        OutputStream out1 = new FileOutputStream(new File("ODTHelloWordWithVelocity_Out1.pdf"));
+        report.convert(context, options, out1);
+
     }
 
 }

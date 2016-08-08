@@ -2,11 +2,11 @@ package com.garryiv.air_tickets.core.services.user;
 
 import com.garryiv.air_tickets.api.user.UserInfo;
 import com.garryiv.air_tickets.api.user.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,9 +24,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfo findOrCreate(@PathVariable String email) {
-        if (StringUtils.isEmpty(email)) {
-            throw new IllegalArgumentException("email is required");
-        }
+        Assert.notNull(email, "email");
 
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -37,7 +35,16 @@ public class UserServiceImpl implements UserService {
         return toUserInfo(user);
     }
 
+    @Override
+    public UserInfo find(@PathVariable Long userId) {
+        Assert.notNull(userId, "userId");
+
+        return toUserInfo(userRepository.findOne(userId));
+    }
+
     private UserInfo toUserInfo(User user) {
+        Assert.notNull(user, "user is not found");
+
         UserInfo info = new UserInfo();
         BeanUtils.copyProperties(user, info);
         return info;

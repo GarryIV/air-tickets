@@ -14,7 +14,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserServiceImplTest {
-
     @Autowired
     private UserService userService;
 
@@ -33,4 +32,23 @@ public class UserServiceImplTest {
         assertEquals(newUser.getId(), existingUser.getId());
         assertEquals(newUser.getEmail(), existingUser.getEmail());
     }
+
+    @Test
+    public void find() {
+        UserInfo newUser = userService.findOrCreate("email@gmail.com");
+
+        UserInfo found = userService.find(newUser.getId());
+        assertNotNull(found);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findNull() {
+        userService.find(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void findNonExisting() {
+        userService.find(Long.MAX_VALUE);
+    }
+
 }
