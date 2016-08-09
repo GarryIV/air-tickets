@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:~/air-tickets
+    username: sa
+    password:
+
+  mail:
+    host:
+    username:
+    password:
+    port:
+    properties:
+      mail.smtp.starttls.enable: true
